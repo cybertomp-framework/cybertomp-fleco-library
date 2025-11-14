@@ -4,11 +4,11 @@
 
 ## Master branch:
 
-![Maven build master](https://github.com/manolodd/fleco/actions/workflows/maven-publish.yml/badge.svg?branch=master)
+![Maven build master](https://github.com/cybertomp-framework/fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=master)
 
 ## Development branch:
 
-![Maven build master](https://github.com/manolodd/fleco/actions/workflows/maven-publish.yml/badge.svg?branch=development)
+![Maven build development](https://github.com/cybertomp-framework/fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=development)
 
 # THE PROJECT
 
