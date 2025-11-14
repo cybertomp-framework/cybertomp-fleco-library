@@ -1,7 +1,5 @@
 # PROJECT STATUS
 
-[![DOI](https://zenodo.org/badge/655389700.svg)](https://zenodo.org/badge/latestdoi/655389700)
-
 ## Master branch:
 
 ![Maven build master](https://github.com/cybertomp-framework/fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=master)
