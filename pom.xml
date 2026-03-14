@@ -36,7 +36,7 @@
     <artifactId>fleco-library</artifactId>
     <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Fast, Lightweigh and Efficient Cybersecurity Optimization (FLECO) adaptive and constrained genetic algorithm</name>
+    <name>FLECO Library</name>
     <description>FLECO is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
     <url>https://www.manolodominguez.com/</url>
     <licenses>
