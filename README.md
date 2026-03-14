@@ -84,7 +84,7 @@ FLECO utilizes several third-party components, each of which is governed by its 
 
 Thanks folks!
 
-# USING FLECO IN JAVA LIBRARY MODE
+# USING CYBERTOMP FLECO LIBRARY
 
 Utilizing FLECO in library mode is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
 
@@ -168,42 +168,3 @@ fleco.getBestChromosome().print();
 The best chromosome obtained represents the target status, encompassing both its genes and their associated values. This set of cybersecurity actions exemplifies a high-quality collection that necessitates implementation to fulfill the strategic cybersecurity goals and constraints. In subsequent executions of FLECO with the same configuration, additional solutions, if they exist, may be discovered.
 
 This example can be found in [SimpleExample.java](src/main/java/com/manolodominguez/experiments/SimpleExample.java)
-
-
-# USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)
-
-Utilizing FLECO Studio, the graphical user interface (GUI) version of FLECO, remains a more streamlined approach. Once the compilation process is complete, the subsequent step merely involves executing the following command:
-
-```console
-java -jar fleco-{YourVersion}-with-dependencies.jar
-``` 
-
-Upon execution, FLECO Studio will automatically launch, providing a user-friendly interface conveniently contained within a single window. To initiate a new case, simply navigate to the "Case" menu and select the "New" option.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/new.png)
-
-Following the selection of the desired implementation group, a comprehensive table containing all the pertinent information is presented.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/complete.png)
-
-Modifiable data can be directly edited within the table by clicking on the corresponding cell. For instance, the initial status, referred to as the current status, should be adjusted to accurately reflect the actual cybersecurity status of each defined cybersecurity action in CyberTOMP, thereby representing the real status of the assets. Additionally, strategic constraints and goals can be defined using the "Constraint operator" and "Constraint value" columns. For example, consider the CyberTOMP metric "ID" with a current status of "0.37425002". By selecting a constraint operator of "GREATER" and a constraint value of "0.8", FLECO is directed to seek a set of cybersecurity actions that collectively ensure the CyberTOMP metric "ID" exceeds (strictly) 0.8.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/constraint.png)
-
-Once the current status of the asset has been comprehensively defined and the desired strategic goals and constraints have been configured within FLECO Studio, it is time to execute FLECO in order to obtain a solution. This can be achieved by selecting the "Run FLECO" option located in the "Case" menu or by clicking on the corresponding icon within the toolbar.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/run_fleco.png)
-
-FLECO will initiate the computation of a set of cybersecurity actions aimed at attaining the predefined cybersecurity goals. Throughout this process, a progress bar located at the bottom of the window will provide real-time updates on the progress. Upon completion of the computation and successful achievement of a solution, the progress bar will display 100%. FLECO Studio will then present the corresponding values associated with the target status, representing the state that, starting from the current state, enables the fulfillment of the strategic cybersecurity goals and constraints. In the "Target status" column, values requiring further attention or action will be highlighted in red. This indication corresponds to the Discrete Level of Implementation (DLI) defined within the CyberTOMP proposal.
-
-Each value in a cell within the "Target status" column signifies a specific cybersecurity action that must be undertaken by a designated functional area. The degree of implementation and level of detail required for each action varies based on the value in the cell. These cybersecurity actions are thoroughly documented as an integral part of the CyberTOMP framework, which can be accessed through the provided link.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/solution.png)
-
-If alternative solutions exist, they can be obtained by re-running FLECO.
-
-FLECo Studio offers online assistance for any of the existing metrics. This enables the cybersecurity team to engage in continuous learning and effectively involves all the required areas. To access this help, you just need to double-click on the row of the metric you wish to inquire about, in any of the first three columns (CyberTOMP metric, Purpose, Leading functional area), as shown in the following image.
-
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/metric_detail.png)
-
-Furthermore, FLECO Studio provides additional features. For instance, it allows the ability to save the case as a JSON file and load it from disk. This functionality facilitates the seamless collaboration of the cross-functional cybersecurity workforce, enabling them to effectively work on the cybersecurity aspects of the corresponding asset continuously.
