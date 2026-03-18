@@ -48,7 +48,7 @@ The optimal course of action entails acquiring the most recent compiled stable r
 - Clone the FLECO repository: 
 
 ```console
-git clone https://github.com/manolodd/fleco.git
+git clone https://github.com/cybertomp-framework/cybertomp-fleco-library.git
 ```
 
 - To obtain a binary JAR file containing all the necessary components, it is essential to compile the code. Prior to that, it is imperative to install Maven:
@@ -66,7 +66,7 @@ cd target
 - Now, run FLECO Studio:
 
 ```console
-java -jar fleco-{YourVersion}-with-dependencies.jar
+java -jar cybertomp-fleco-library-{YourVersion}-with-dependencies.jar
 
 ```
 # THIRD-PARTY COMPONENTS
