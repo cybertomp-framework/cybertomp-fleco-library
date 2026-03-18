@@ -12,14 +12,13 @@
 
 ![](src/main/resources/com/manolodominguez/fleco/logo/FlecoLogo.png)
 
-<b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, and Constrained Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced Cybersecurity Operation Centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
+<b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, and Constrained Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP® (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced Cybersecurity Operation Centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
 
-It serves as a library that can be seamlessly incorporated into larger solutions to facilitate testing. However, it is accompanied by FLECO Studio, a comprehensive GUI-based solution (4) that is highly recommended for the committee responsible for selecting the necessary cybersecurity measures as defined in CyberTOMP. FLECO Studio enables this committee to conduct multiple simulations, preserve the current system state and the desired target state, load previously saved cases from storage, and seamlessly resume their work.
+It serves as a library that can be seamlessly incorporated into larger solutions to facilitate testing. FLECO Studio enables this committee to conduct multiple simulations, preserve the current system state and the desired target state, load previously saved cases from storage, and seamlessly resume their work.
 
 1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
 2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels. IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
 3. Domínguez-Dorado, M.; Rodríguez-Pérez, F.J.; Carmona-Murillo, J.; Cortés-Polo, D.; Calle-Cancho, J. Boosting Holistic Cybersecurity Awareness with Outsourced Wide-Scope CyberSOC: A Generalization from a Spanish Public Organization Study. Information 2023, 14, 586. https://doi.org/10.3390/info14110586
-4. Domínguez-Dorado ,M.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J.; Calle-Cancho, J.; Cortés-Polo, D. FLECO: A tool to boost the adoption of holistic cybersecurity management. Softwsare Impacts 19 (2024) 100614. https://doi.org/10.1016/j.simpa.2024.100614
 
 # LICENSE
 
@@ -84,7 +83,7 @@ FLECO utilizes several third-party components, each of which is governed by its 
 
 Thanks folks!
 
-# USING CYBERTOMP FLECO LIBRARY
+# USING CyberTOMP® FLECO LIBRARY
 
 Utilizing FLECO in library mode is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
 
@@ -105,7 +104,7 @@ float crossoverProbability = 0.90f;
 ImplementationGroups implementationGroup = ImplementationGroups.IG3; 
 ```
 
-Subsequently, proceed to generate and establish the current cybersecurity status of your asset based on the CyberTOMP proposal. It is essential to configure the value of each allele within the chromosomes individually to accurately reflect the anticipated outcome of your asset. This can be achieved by making sequential calls to the updateAllele(gene, allele) method. For example:
+Subsequently, proceed to generate and establish the current cybersecurity status of your asset based on the CyberTOMP® proposal. It is essential to configure the value of each allele within the chromosomes individually to accurately reflect the anticipated outcome of your asset. This can be achieved by making sequential calls to the updateAllele(gene, allele) method. For example:
 
 ```java
 Chromosome initialStatus = new Chromosome(implementationGroup);
@@ -143,7 +142,7 @@ strategicConstraints.addConstraint(Genes.DE_AE_DE_AE_5, new Constraint(Compariso
 strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
 strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
 ```
-As demonstrated, these goals can be defined at various levels within the CyberTOMP's hierarchy of metrics.
+As demonstrated, these goals can be defined at various levels within the CyberTOMP®'s hierarchy of metrics.
 
 Moving forward, instantiate the FLECO algorithm by initializing it with the aforementioned definitions.
         
