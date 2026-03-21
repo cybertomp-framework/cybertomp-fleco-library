@@ -21,20 +21,20 @@
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
         <!--- Required by Sonarcloud -->
         <sonar.organization>cybertomp-framework</sonar.organization>
-        <sonar.projectKey>fleco-library</sonar.projectKey>
+        <sonar.projectKey>cybertomp-fleco-library</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>9</maven.compiler.release> 
         <!-- About this version of FLECO (used for properties filtering) -->
-        <fleco.version>2.1-SNAPSHOT</fleco.version>
+        <fleco.version>v1</fleco.version>
         <fleco.license>LGPL-3.0-or-later</fleco.license>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
-    <artifactId>fleco-library</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <artifactId>cybertomp-fleco-library</artifactId>
+    <version>v1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>FLECO Library</name>
     <description>FLECO is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
