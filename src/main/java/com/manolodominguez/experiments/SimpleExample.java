@@ -35,16 +35,11 @@
  */
 package com.manolodominguez.experiments;
 
-import com.manolodominguez.experiments.definitions.constraints.AFCEOLevelStrategicConstraints;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG1;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG2;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import com.manolodominguez.fleco.events.DefaultProgressEventListener;
-import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
@@ -66,8 +61,6 @@ public class SimpleExample {
      * for a given asset and also a set of strategic cybersecurity constraints
      * and run FLECO to find a solution in the form of a desired cybersecurity
      * status.
-     *
-     * @author Manuel Domínguez-Dorado
      * @param args Command line arguments
      */
     public static void main(String[] args) {

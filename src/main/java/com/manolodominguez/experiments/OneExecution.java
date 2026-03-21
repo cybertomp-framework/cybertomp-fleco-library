@@ -61,8 +61,6 @@ public class OneExecution {
      * for a given asset and also a set of strategic cybersecurity constraints
      * and run FLECO to find a solution in the form of a desired cybersecurity
      * status.
-     *
-     * @author Manuel Domínguez-Dorado
      * @param args Command line arguments
      */
     public static void main(String[] args) {

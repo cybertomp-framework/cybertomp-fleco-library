@@ -57,7 +57,6 @@ public class AFLevelStrategicConstraints extends StrategicConstraints {
      * constraints for the overall asset's cybersecurity status and also for
      * cybersecurity functions.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */

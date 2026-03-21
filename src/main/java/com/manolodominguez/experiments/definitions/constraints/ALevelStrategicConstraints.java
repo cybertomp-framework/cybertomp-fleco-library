@@ -54,7 +54,6 @@ public class ALevelStrategicConstraints extends StrategicConstraints {
      * This is the constuctor of the class. It creates a new instance and adds a
      * single constraint related the the overall asset's cybersecurity status.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */

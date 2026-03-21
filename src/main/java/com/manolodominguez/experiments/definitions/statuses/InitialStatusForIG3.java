@@ -53,8 +53,6 @@ public class InitialStatusForIG3 extends Chromosome {
      * This is the constuctor of the class. It creates a new initial
      * cybersecurity status for a ficticious asset where the applicable
      * implementation group is IG3.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public InitialStatusForIG3() {
         super(ImplementationGroups.IG3);

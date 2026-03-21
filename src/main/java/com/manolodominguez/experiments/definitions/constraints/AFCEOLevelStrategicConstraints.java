@@ -59,7 +59,6 @@ public class AFCEOLevelStrategicConstraints extends StrategicConstraints {
      * constraints for the overall asset's cybersecurity status and also for
      * cybersecurity functions, cybersecurity categories and expected outcomes.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */
