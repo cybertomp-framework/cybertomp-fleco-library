@@ -38,7 +38,6 @@ package com.manolodominguez.fleco.strategicconstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.genetics.Alleles;
-import com.manolodominguez.fleco.main.FLECOStudio;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
