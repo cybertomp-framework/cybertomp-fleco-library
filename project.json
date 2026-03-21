@@ -1,7 +1,7 @@
 {
     "projectinfo": {
-        "name": "fleco",
-        "version": "2.1-SNAPSHOT",
+        "name": "cybertomp-fleco-library",
+        "version": "v2-SNAPSHOT",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },
@@ -12,20 +12,6 @@
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
-        },
-        {
-            "component": "miglayout",
-            "version": "11.3",
-            "license": "BSD_3_CLAUSE",
-            "weight": "HIGH",
-            "link": "DYNAMIC"
-        },
-        {
-            "component": "TableColumnAdjuster",
-            "version": "unknown",
-            "license": "PUBLIC_DOMAIN",
-            "weight": "LOW",
-            "link": "STATIC"
         },
         {
             "component": "slf4j-api",

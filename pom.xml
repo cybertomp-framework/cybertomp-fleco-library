@@ -2,8 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <properties>
         <!--- Dependency versions -->
-        <treetable.version>0.0.2</treetable.version>
-        <miglayout-swing.version>11.3</miglayout-swing.version>
         <everit-json-schema.version>1.14.4</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
@@ -21,23 +19,23 @@
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
         <!--- Required by Sonarcloud -->
         <sonar.organization>cybertomp-framework</sonar.organization>
-        <sonar.projectKey>fleco-library</sonar.projectKey>
+        <sonar.projectKey>cybertomp-fleco-library</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>9</maven.compiler.release> 
         <!-- About this version of FLECO (used for properties filtering) -->
-        <fleco.version>2.1-SNAPSHOT</fleco.version>
+        <fleco.version>v2-SNAPSHOT</fleco.version>
         <fleco.license>LGPL-3.0-or-later</fleco.license>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
-    <artifactId>fleco-library</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <artifactId>cybertomp-fleco-library</artifactId>
+    <version>v2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>FLECO Library</name>
-    <description>FLECO is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
+    <name>CyberTOMP(R) FLECO Library</name>
+    <description>CyberTOMP(R) FLECO Library is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
     <url>https://www.manolodominguez.com/</url>
     <licenses>
         <license>
@@ -49,14 +47,14 @@
         <developer>
             <name>Manuel Domínguez Dorado</name>
             <email>ingeniero@ManoloDominguez.com</email>
-            <organization>Manuel Domínguez Dorado</organization>
-            <organizationUrl>https://manolodominguez.com</organizationUrl>
+            <organization>CyberTOMP(R) Framework</organization>
+            <organizationUrl>https://cybertomp.org/</organizationUrl>
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/manolodd/fleco.git</connection>
-        <developerConnection>scm:git:ssh://github.com:manolodd/fleco.git</developerConnection>
-        <url>http://github.com/manolodd/fleco/tree/master</url>
+        <connection>scm:git:git://github.com/cybertomp-framework/cybertomp-fleco-library.git</connection>
+        <developerConnection>scm:git:ssh://github.com:cybertomp-framework/cybertomp-fleco-library.git</developerConnection>
+        <url>https://github.com/cybertomp-framework/cybertomp-fleco-library/tree/master</url>
     </scm>    
     <build>
         <finalName>fleco-${project.version}</finalName>
@@ -120,11 +118,6 @@
                         <exclude>**/*.jpg</exclude>
                         <exclude>**/*.xcf</exclude>
                     </excludes>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.manolodominguez.fleco.main.FLECOStudio</mainClass>
-                        </manifest>
-                    </archive>
                 </configuration>
             </plugin>            
             <plugin>
@@ -138,11 +131,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.manolodominguez.fleco.main.FLECOStudio</mainClass>
-                                </transformer>
-                            </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>with-dependencies</shadedClassifierName>
                             <filters>
@@ -233,11 +221,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${lsf4j-simple.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout-swing</artifactId>
-            <version>${miglayout-swing.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.erosb</groupId>
