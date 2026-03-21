@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.experiments.Complete;
 import com.manolodominguez.fleco.events.ProgressEvent;
 import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
@@ -95,7 +94,6 @@ public class FLECO {
      * Constrained, and Multi-Objectives Genetic Algorithm with the parameters
      * specified.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialPopulation The initial number of chromosomes in the
      * population.
      * @param maxAvailableSeconds The max number of seconds before finishing the
@@ -128,7 +126,6 @@ public class FLECO {
     /**
      * This method sets the progress event listener for FLECO.
      *
-     * @author Manuel Domínguez-Dorado
      * @param progressEventListener the progress event listener.
      */
     public void setProgressEventListener(IFLECOProgressEventListener progressEventListener) {
@@ -143,8 +140,6 @@ public class FLECO {
      * The population is developed according to FLECO principles using this
      * approach, until either the algorithm reaches convergence or the maximum
      * number of generations is attained.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void evolve() {
         int currentGeneration = 0;
@@ -237,8 +232,6 @@ public class FLECO {
     /**
      * This method returns the number of seconds the execution of FLECO has
      * lasted.
-     *
-     * @author Manuel Domínguez-Dorado
      * @return the number of seconds the execution of FLECO has lasted.
      */
     public float getUsedTime() {
@@ -248,8 +241,6 @@ public class FLECO {
     /**
      * This method returns the number of generations the execution of FLECO has
      * required.
-     *
-     * @author Manuel Domínguez-Dorado
      * @return the number of generations the execution of FLECO has required.
      */
     public int getUsedGenerations() {
@@ -262,8 +253,6 @@ public class FLECO {
      *
      * @param begin the time when the algorithm started to evolve the
      * population.
-     *
-     * @author Manuel Domínguez-Dorado
      * @return true, if the conditions to finish FLECO execution exist.
      * Otherwise return false.
      */
@@ -278,8 +267,6 @@ public class FLECO {
     /**
      * This method returns whether FLECO algorithm has converged or not.
      *
-     * @author Manuel Domínguez-Dorado
-     *
      * @return true if FLECO algorithm has converged to a high quality solution.
      * Otherwise, return false.
      */
@@ -290,8 +277,6 @@ public class FLECO {
     /**
      * This method returns the chromosome with the best fitness in the
      * population.
-     *
-     * @author Manuel Domínguez-Dorado
      *
      * @return The chromosome with the best fitness in the population.
      */

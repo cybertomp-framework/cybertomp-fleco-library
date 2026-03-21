@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.experiments.Complete;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import java.util.Comparator;
 import org.slf4j.Logger;
@@ -54,7 +53,6 @@ public class ChromosomeComparator implements Comparator<Chromosome> {
     /**
      * This methods compares two chromosomes in order to establish an order.
      *
-     * @author Manuel Domínguez-Dorado
      * @param chromosome1 The first chromosome to be compared.
      * @param chromosome2 The second chromosome to be compared.
      * @return -1, 0, 1 depending on whether the chromosome1 is greater, equal

@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.experiments.Complete;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Chromosome;
@@ -72,7 +71,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * ones derived from the initial cybersecurity status and the defined
      * strategic objectives.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialNumberOfChromosomes The initial number of chromosomes in
      * the population.
      * @param implementationGroup The implementation group that applies to the
@@ -108,8 +106,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     /**
      * This class insert new random chromosomes in the population until the
      * defined initial number of chromosomes are reached.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public final void populateRandomly() {
         while (size() < initialNumberOfChromosomes) {
@@ -126,8 +122,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * population's size is greater than the initial number of chromosomes or
      * not. It is used to enlarge the population's size under certain
      * circumstances.
-     *
-     * @author Manuel Domínguez-Dorado
      * @param additionalChromosomes the number of random chromosomes to add to
      * the population.
      */
@@ -145,8 +139,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method select the established percentage of the population's best
      * individuals as parents for the next generation, removing the twins if
      * they exist. It discards the rest.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void selectBestAdapted() {
         // First it compute fitness and sort the population based on it.
@@ -196,8 +188,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method generate mutated chromosomes from the current population. It
      * goes across all genes of each chromosome applying a mutation when
      * applicable due to the defiend mutation rate.
-     *
-     * @author Manuel Domínguez-Dorado
+     * 
      * @param mutationProbablity the probability that a chromosome is mutated.
      */
     public void mutate(float mutationProbablity) {
@@ -245,7 +236,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * the chromosomes or from the beginning of the chromosome to the crossing
      * point, randomly.
      *
-     * @author Manuel Domínguez-Dorado
      * @param crossoverProbability
      */
     public void crossover(float crossoverProbability) {
@@ -300,8 +290,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     /**
      * This method computes the fitness for every chromosome in the population
      * and also the average fitness of all them.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void computeFitnessAndSort() {
         fitnessAverage = 0.0f;
@@ -320,8 +308,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method perform a soft reset of the algorithm by replacing the best
      * fitted individual with random ones and recomputing the fitness
      * accordingly.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void softReset() {
         fitnessAverage = 0.0f;
@@ -341,7 +327,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method returns whether the population contains a best individual
      * with enough quality, or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @return true, if the population contains a best individual with enough
      * quality. Otherwise, false.
      */
@@ -353,7 +338,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method returns the average fitness of all chromosomes in the
      * population.
      *
-     * @author Manuel Domínguez-Dorado
      * @return The average fitness of all chromosomes in the population.
      */
     public float getFitnessAverage() {
@@ -364,7 +348,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This method reduces the number of chromosomes in the population
      * maintaining only the best ones especified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param finalNumber The number of best chromosomes that will survive to
      * the pupulation reduction.
      */
@@ -383,8 +366,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     /**
      * This method prints the population and the most important information
      * related to it.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void print() {
         int i = 0;
