@@ -36,8 +36,8 @@
     <artifactId>cybertomp-fleco-library</artifactId>
     <version>v1</version>
     <packaging>jar</packaging>
-    <name>FLECO Library</name>
-    <description>FLECO is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
+    <name>CyberTOMP(R) FLECO Library</name>
+    <description>CyberTOMP(R) FLECO Library is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
     <url>https://www.manolodominguez.com/</url>
     <licenses>
         <license>
@@ -59,7 +59,7 @@
         <url>http://github.com/manolodd/fleco/tree/master</url>
     </scm>    
     <build>
-        <finalName>fleco-${project.version}</finalName>
+        <finalName>cybertomp-fleco-library-${project.version}</finalName>
         <plugins>         
             <plugin>
                 <groupId>com.manolodominguez</groupId>
