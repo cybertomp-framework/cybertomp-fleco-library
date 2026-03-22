@@ -15,6 +15,7 @@
         <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
         <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
         <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <jacoco.maven.plugin.version>0.8.14</jacoco.maven.plugin.version>
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
         <!--- Required by Sonarcloud -->
@@ -233,6 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
