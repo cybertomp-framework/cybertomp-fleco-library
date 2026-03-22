@@ -86,7 +86,7 @@ Thanks folks!
 
 # USING CyberTOMP® FLECO LIBRARY
 
-Utilizing FLECO in library mode is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
+Utilizing CyberTOMP® FLECO Library is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
 
 Specify the parameters for the the algorithm.
 
