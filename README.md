@@ -12,15 +12,15 @@
 
 ![](src/main/resources/com/manolodominguez/fleco/logo/FlecoLogo.png)
 
-<b>CyberTOMP® FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) is an adaptive and constrained genetic algorithm designed to assist the Asset's Cybersecurity Committee in making decisions during the application of CyberTOMP®, aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced cybersecurity operation centers that could be cooperating with tyhe main organizations to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
+**CyberTOMP® FLECO** (Fast, Lightweight, and Efficient Cybersecurity Optimization) is an adaptive and constrained genetic algorithm designed to assist the Asset's Cybersecurity Committee in making decisions during the application of CyberTOMP®, aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced cybersecurity operation centers that could be cooperating with tyhe main organizations to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
 
 It is developed as as a library that can be seamlessly incorporated into larger solutions to facilitate the identification of feasible cybersecurity solutions to reach the organization's strategic cybersecurity goals. 
 
 ## Foundational research
 
-1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
-2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels. IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
-3. Domínguez-Dorado, M.; Rodríguez-Pérez, F.J.; Carmona-Murillo, J.; Cortés-Polo, D.; Calle-Cancho, J. Boosting Holistic Cybersecurity Awareness with Outsourced Wide-Scope CyberSOC: A Generalization from a Spanish Public Organization Study. Information 2023, 14, 586. https://doi.org/10.3390/info14110586
+1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. [Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management.](https://doi.org/10.3390/app13106327) Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
+2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). [CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels.](https://doi.org/10.1109/ACCESS.2022.3223440) IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
+3. Domínguez-Dorado, M.; Rodríguez-Pérez, F.J.; Carmona-Murillo, J.; Cortés-Polo, D.; Calle-Cancho, J. [Boosting Holistic Cybersecurity Awareness with Outsourced Wide-Scope CyberSOC: A Generalization from a Spanish Public Organization Study.](https://doi.org/10.3390/info14110586) Information 2023, 14, 586. https://doi.org/10.3390/info14110586
 
 # DEVELOPMENT LEADER
     
