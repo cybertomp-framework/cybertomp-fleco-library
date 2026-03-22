@@ -12,9 +12,9 @@
 
 ![](src/main/resources/com/manolodominguez/fleco/logo/FlecoLogo.png)
 
-<b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, and Constrained Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP® (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced Cybersecurity Operation Centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
+<b>CyberTOMP® FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) is an adaptive and constrained genetic algorithm designed to assist the Asset's Cybersecurity Committee (as defined in CyberTOMP® Framework) in making decisions during the application of CyberTOMP® (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced cybersecurity operation centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
 
-It serves as a library that can be seamlessly incorporated into larger solutions to facilitate testing. FLECO Studio enables this committee to conduct multiple simulations, preserve the current system state and the desired target state, load previously saved cases from storage, and seamlessly resume their work.
+It is developed as as a library that can be seamlessly incorporated into larger solutions to facilitate the identification of feasible cybersecurity solutions to reach the organization's strategic cybersecurity goals. 
 
 1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
 2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels. IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
@@ -24,28 +24,41 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 
 ## Latest snapshot version being developed:
 
-- <b>FLECO 2.1-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v2-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
 ## Binary releases:
  
-- <b>FLECO 2.0</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v1</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 2.0</b> LGPL-3.0-or-later.
 - <b>FLECO 1.4</b> LGPL-3.0-or-later.
 - <b>FLECO 1.3</b> LGPL-3.0-or-later.
 - <b>FLECO 1.2</b> LGPL-3.0-or-later.
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
 - <b>FLECO 1.0</b> LGPL-3.0-or-later.
 
-# PEOPLE BEHIND FLECO
+# PEOPLE BEHIND CyberTOMP® FLECO Library
 
-## Author:
+## DEVELOPMENT LEADER:
     
  - Manuel Domínguez-Dorado - <ingeniero@ManoloDominguez.com>
    
+# ARTIFACTS AVAILABILITY
+
+You can download latest compiled stable releases from the releases section of this repository. Also, since release v1 CyberTOMP® FLECO Library is in Maven Central so you can add it as a dependecy in your Maven project inserting the following in your pom.xml:
+```console
+<dependency>
+    <groupId>com.manolodominguez</groupId>
+    <artifactId>cybertomp-fleco-library</artifactId>
+    <version>v1</version>
+</dependency>
+```
+For othe project builders (graddle, buildr...) see the next link in Maven Central: https://central.sonatype.com/artifact/com.manolodominguez/cybertomp-fleco-library
+
 # COMPILING FROM SOURCES
 
 The optimal course of action entails acquiring the most recent compiled stable releases from the releases section of this repository. Nevertheless, if one desires to assess novel functionalities, it becomes imperative to compile the project from its sources. The subsequent instructions outline the necessary steps to accomplish this task:
 
-- Clone the FLECO repository: 
+- Clone the CyberTOMP® FLECO Library repository: 
 
 ```console
 git clone https://github.com/cybertomp-framework/cybertomp-fleco-library.git
@@ -54,24 +67,15 @@ git clone https://github.com/cybertomp-framework/cybertomp-fleco-library.git
 - To obtain a binary JAR file containing all the necessary components, it is essential to compile the code. Prior to that, it is imperative to install Maven:
 
 ```console
-cd fleco
+cd cybertomp-fleco-library
 mvn package
 ```
 
 - The jar file will be located in "target" directory.
 
-```console
-cd target
-```
-- Now, run FLECO Studio:
-
-```console
-java -jar cybertomp-fleco-library-{YourVersion}-with-dependencies.jar
-
-```
 # THIRD-PARTY COMPONENTS
 
-FLECO utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of FLECO under its existing OSS license. The components integrated within FLECO encompass the following:
+CyberTOMP® FLECO Library utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of CyberTOMP® FLECO Library under its existing OSS license. The components integrated within CyberTOMP® FLECO Library encompass the following:
 
 - unirest-java-core 4.2.7 - MIT - https://kong.github.io/unirest-java/
 - everit-json-schema 1.14.4 - Apache-2.0 - https://github.com/everit-org/json-schema
