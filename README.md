@@ -52,7 +52,7 @@ You can download latest compiled stable releases from the releases section of th
     <version>v1</version>
 </dependency>
 ```
-For othe project builders (graddle, buildr...) see the next link in Maven Central: https://central.sonatype.com/artifact/com.manolodominguez/cybertomp-fleco-library
+For othe project builders (graddle, buildr...) see the next link in Maven Central: https://central.sonatype.com/artifact/com.manolodominguez/cybertomp-fleco-library/v1
 
 # COMPILING FROM SOURCES
 
