@@ -1,24 +1,30 @@
 # PROJECT STATUS
 
-## Master branch:
+## Current release (*master* branch):
 
-![Maven build master](https://github.com/cybertomp-framework/fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=master)
+![Maven build master](https://github.com/cybertomp-framework/cybertomp-fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=master)
 
-## Development branch:
+## Next release (*next* branch):
 
-![Maven build development](https://github.com/cybertomp-framework/fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=development)
+![Maven build development](https://github.com/cybertomp-framework/cybertomp-fleco-library/actions/workflows/maven-publish.yml/badge.svg?branch=next)
 
 # THE PROJECT
 
 ![](src/main/resources/com/manolodominguez/fleco/logo/FlecoLogo.png)
 
-<b>CyberTOMP® FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) is an adaptive and constrained genetic algorithm designed to assist the Asset's Cybersecurity Committee (as defined in CyberTOMP® Framework) in making decisions during the application of CyberTOMP® (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced cybersecurity operation centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
+<b>CyberTOMP® FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) is an adaptive and constrained genetic algorithm designed to assist the Asset's Cybersecurity Committee in making decisions during the application of CyberTOMP®, aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced cybersecurity operation centers that could be cooperating with tyhe main organizations to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.
 
 It is developed as as a library that can be seamlessly incorporated into larger solutions to facilitate the identification of feasible cybersecurity solutions to reach the organization's strategic cybersecurity goals. 
+
+## Foundational research
 
 1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
 2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels. IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
 3. Domínguez-Dorado, M.; Rodríguez-Pérez, F.J.; Carmona-Murillo, J.; Cortés-Polo, D.; Calle-Cancho, J. Boosting Holistic Cybersecurity Awareness with Outsourced Wide-Scope CyberSOC: A Generalization from a Spanish Public Organization Study. Information 2023, 14, 586. https://doi.org/10.3390/info14110586
+
+# DEVELOPMENT LEADER
+    
+ - Manuel Domínguez-Dorado - <ingeniero@ManoloDominguez.com>
 
 # LICENSE
 
@@ -26,7 +32,7 @@ It is developed as as a library that can be seamlessly incorporated into larger 
 
 - <b>CyberTOMP® FLECO Library v2-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
-## Binary releases:
+## Releases:
  
 - <b>CyberTOMP® FLECO Library v1</b> (current, master branch) - LGPL-3.0-or-later.
 - <b>FLECO 2.0</b> LGPL-3.0-or-later.
@@ -35,13 +41,7 @@ It is developed as as a library that can be seamlessly incorporated into larger 
 - <b>FLECO 1.2</b> LGPL-3.0-or-later.
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
 - <b>FLECO 1.0</b> LGPL-3.0-or-later.
-
-# PEOPLE BEHIND CyberTOMP® FLECO Library
-
-## DEVELOPMENT LEADER:
-    
- - Manuel Domínguez-Dorado - <ingeniero@ManoloDominguez.com>
-   
+ 
 # ARTIFACTS AVAILABILITY
 
 You can download latest compiled stable releases from the releases section of this repository. Also, since release v1 CyberTOMP® FLECO Library is in Maven Central so you can add it as a dependecy in your Maven project inserting the following in your pom.xml:
@@ -84,7 +84,7 @@ CyberTOMP® FLECO Library utilizes several third-party components, each of which
 
 Thanks folks!
 
-# USING CyberTOMP® FLECO LIBRARY
+# USING CYBERTOMP® FLECO LIBRARY
 
 Utilizing CyberTOMP® FLECO Library is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
 
