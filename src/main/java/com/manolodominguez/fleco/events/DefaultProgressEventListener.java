@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.events;
 
-import com.manolodominguez.fleco.algorithm.Population;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +51,6 @@ public class DefaultProgressEventListener implements IFLECOProgressEventListener
     /**
      * This methods receive a progress event from a FLECO instance and print the
      * information contained on it.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     @Override
     public void onProgressEventReceived(ProgressEvent progressEvent) {

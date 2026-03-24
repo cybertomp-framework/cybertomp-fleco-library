@@ -58,7 +58,6 @@ public enum Alleles {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding value.
      *
-     * @author Manuel Domínguez-Dorado
      * @param DLI Afloat value representing the discrete level of
      * implementation. A number between 0.0 and 1.0.
      */
@@ -70,7 +69,6 @@ public enum Alleles {
      * This method return the numeric value of the discrete level of
      * implementation.
      *
-     * @author Manuel Domínguez-Dorado
      * @return The numeric value of the discrete level of implementation.
      */
     public float getDLI() {
@@ -81,7 +79,6 @@ public enum Alleles {
      * This method returns the first DLI that is greater than the value
      * specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value The reference value.
      * @return the first DLI that is greater than the value specified as a
      * parameter, if exists. Otherwise, null.
@@ -101,7 +98,6 @@ public enum Alleles {
      * This method returns the first DLI that is greater or equal than the value
      * specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value The reference value.
      * @return the first DLI that is greater or equal than the value specified
      * as a parameter, if exists. Otherwise, null.
@@ -121,7 +117,6 @@ public enum Alleles {
      * This method returns the DLI that is equal than the value specified as a
      * parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value The reference value.
      * @return the first DLI equal than the value specified as a parameter, if
      * exists. Otherwise, null.
@@ -141,7 +136,6 @@ public enum Alleles {
      * This method returns the first DLI that is lesser or equal than the value
      * specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value The reference value.
      * @return the first DLI that is lesser or equal than the value specified as
      * a parameter, if exists. Otherwise, null.
@@ -161,7 +155,6 @@ public enum Alleles {
      * This method returns the first DLI that is lesser than the value specified
      * as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value The reference value.
      * @return the first DLI that is lesser than the value specified as a
      * parameter, if exists. Otherwise, null.

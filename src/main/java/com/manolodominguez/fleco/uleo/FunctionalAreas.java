@@ -69,7 +69,6 @@ public enum FunctionalAreas {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param name the short name of the functional area.
      * @param mainReponsibilities the main responsibilities the corresponding
      * functional area must be in charge of.
@@ -82,7 +81,6 @@ public enum FunctionalAreas {
     /**
      * This method return the short name of the functional area.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the short name of the functional area.
      */
     public String getAreaName() {
@@ -96,7 +94,6 @@ public enum FunctionalAreas {
      * This method return the main responsibilities the corresponding functional
      * area must be in charge of.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the main responsibilities the corresponding functional area must
      * be in charge of.
      */

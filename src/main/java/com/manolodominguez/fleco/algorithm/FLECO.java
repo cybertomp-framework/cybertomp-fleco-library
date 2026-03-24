@@ -232,6 +232,7 @@ public class FLECO {
     /**
      * This method returns the number of seconds the execution of FLECO has
      * lasted.
+     * 
      * @return the number of seconds the execution of FLECO has lasted.
      */
     public float getUsedTime() {
@@ -241,6 +242,7 @@ public class FLECO {
     /**
      * This method returns the number of generations the execution of FLECO has
      * required.
+     * 
      * @return the number of generations the execution of FLECO has required.
      */
     public int getUsedGenerations() {

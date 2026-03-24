@@ -68,7 +68,6 @@ public class StrategicConstraints {
     /**
      * This is the constructor of the class. It creates a new, empty instance.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup the implementation group that applies due to
      * the criticlity of the asset being considered.
      */
@@ -83,8 +82,6 @@ public class StrategicConstraints {
     /**
      * This method removes all the strategic constraint defined at whatever
      * levels.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void removeAll() {
         geneConstraints = new EnumMap<>(Genes.class);
@@ -97,7 +94,6 @@ public class StrategicConstraints {
      * This method set a new constraint defined for a given cybersecurity
      * expected outcome/gene.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene The gene/expected outcome the constraint is defined for.
      * @param constraint The defined constraint.
      */
@@ -111,7 +107,6 @@ public class StrategicConstraints {
      * This method set a new constraint defined for a given cybersecurity
      * category.
      *
-     * @author Manuel Domínguez-Dorado
      * @param category The cybersecurity categroy the constraint is defined for.
      * @param constraint The defined constraint.
      */
@@ -125,7 +120,6 @@ public class StrategicConstraints {
      * This method set a new constraint defined for a given cybersecurity
      * function.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function The cybersecurity function the constraint is defined for.
      * @param constraint The defined constraint.
      */
@@ -139,7 +133,6 @@ public class StrategicConstraints {
      * This method set a new hig-level constraint defined for the global asset's
      * cybersecurity status.
      *
-     * @author Manuel Domínguez-Dorado
      * @param constraint The defined constraint.
      */
     public void addConstraint(Constraint constraint) {
@@ -150,7 +143,6 @@ public class StrategicConstraints {
      * This method check whether a specific gene/expected outcome has a
      * constraint associated to it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene The gene that is bein queried.
      * @return true, if the specified gene has a constraint associated to it.
      * Otherwise, false.
@@ -163,7 +155,6 @@ public class StrategicConstraints {
      * This method check whether a specific cybersecurity category has a
      * constraint associated to it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param category The cybersecurity category that is bein queried.
      * @return true, if the specified cybersecurity category has a constraint
      * associated to it. Otherwise, false.
@@ -176,7 +167,6 @@ public class StrategicConstraints {
      * This method check whether a specific cybersecurity function has a
      * constraint associated to it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function The cybersecurity function that is bein queried.
      * @return true, if the specified cybersecurity function has a constraint
      * associated to it. Otherwise, false.
@@ -189,7 +179,6 @@ public class StrategicConstraints {
      * This method check whether the global asset's cybersecurity status has a
      * constraint associated to it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @return true, if the global asset's cybersecurity status has a constraint
      * associated to it. Otherwise, false.
      */
@@ -201,7 +190,6 @@ public class StrategicConstraints {
      * This method returns the constraint associated to the gene/expected
      * outcome specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene The gene whose constraint is being requested.
      * @return the constraint associated to the gene/expected outcome specified
      * as a parameter.
@@ -214,7 +202,6 @@ public class StrategicConstraints {
      * This method returns the constraint associated to the cybersecurity
      * category specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param category The cybersecurity category whose constraint is being
      * requested.
      * @return the constraint associated to the cybersecurity category specified
@@ -228,7 +215,6 @@ public class StrategicConstraints {
      * This method returns the constraint associated to the cybersecurity
      * function specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function The cybersecurity function whose constraint is being
      * requested.
      * @return the constraint associated to the cybersecurity function specified
@@ -242,7 +228,6 @@ public class StrategicConstraints {
      * This method returns the constraint associated to the global asset's
      * cybersecurity status.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the constraint associated to the global asset's cybersecurity
      * status.
      */
@@ -252,8 +237,6 @@ public class StrategicConstraints {
 
     /**
      * This method removes the strategic constraint defined at asset level.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void removeConstraint() {
         assetConstraint = null;
@@ -263,7 +246,6 @@ public class StrategicConstraints {
      * This method removes the strategic constraint defined at function level
      * and associated to the specified function.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function the specified function.
      */
     public void removeConstraint(Functions function) {
@@ -274,7 +256,6 @@ public class StrategicConstraints {
      * This method removes the strategic constraint defined at category level
      * and associated to the specified category.
      *
-     * @author Manuel Domínguez-Dorado
      * @param category the specified category.
      */
     public void removeConstraint(Categories category) {
@@ -285,7 +266,6 @@ public class StrategicConstraints {
      * This method removes the strategic constraint defined at expected outcome
      * or gene level and associated to the specified gene.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene the specified category.
      */
     public void removeConstraint(Genes gene) {
@@ -298,7 +278,6 @@ public class StrategicConstraints {
      * cybersecurity. They can be used as part of the starting population for
      * FLECO.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus The initial status of cybersecurity of the asset
      * being protected.
      * @return the constraint associated to the global asset's cybersecurity
@@ -435,7 +414,6 @@ public class StrategicConstraints {
      * This method returns the number of strategic constraints that has been
      * defined.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the number of strategic constraints that has been defined.
      */
     public int numberOfConstraints() {
@@ -453,8 +431,6 @@ public class StrategicConstraints {
      * This method prints the strategic constraints that has been defined,
      * classifying them in asset constraints, functions constraints, categories
      * constraints and expected outcomes constraints.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void print() {
         logger.info("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThreshold());
@@ -473,7 +449,6 @@ public class StrategicConstraints {
      * This method returns the strategic constraints as JSON strings to be
      * treated automatically whenever needed.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the strategic constraints as JSON strings
      */
     public String getConstraintsAsJSONString() {

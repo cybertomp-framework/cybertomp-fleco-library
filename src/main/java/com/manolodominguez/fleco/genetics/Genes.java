@@ -47,8 +47,6 @@ import org.slf4j.LoggerFactory;
  * and also its weights as defined in CyberTOMP proposal, depending on whether
  * implementation groups 1, 2, or 3 applies. Additional descriptions and
  * auxiliar data is provided for each.
- *
- * @author manuel Domínguez-Dorado
  */
 public enum Genes {
     ID_AM_CSC_1_1((float) 1 / 8, (float) 1 / 11, (float) 1 / 11, ImplementationGroups.IG1, Categories.ID_AM, "CSC-1.1", "Establish and maintain detailed enterprise asset inventory", "Establish and maintain an accurate, detailed, and up-to-date inventory of all enterprise assets with the potential to store or process data, to include: end-user devices (including portable and mobile), network devices, non-computing/IoT devices, and servers. Ensure the inventory records the network address (if static), hardware address, machine name, enterprise asset owner, department for each asset, and whether the asset has been approved to connect to the network. For mobile end-user devices, MDM type tools can support this process, where appropriate. This inventory includes assets connected to the infrastructure physically, virtually, remotely, and those within cloud environments. Additionally, it includes assets that are regularly connected to the enterprise’s network infrastructure, even if they are not under control of the enterprise. Review and update the inventory of all enterprise assets bi-annually, or more frequently.", "CIS Critical Security Controls v8", FunctionalAreas.FA7),
@@ -234,7 +232,6 @@ public enum Genes {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param weightIG1 A float value representing the weight of this
      * gene/expected outcome when applying implementation group 1. A number
      * between 0.0 and 1.0.
@@ -276,7 +273,6 @@ public enum Genes {
      * This method returns the weight of the gene/expected outcome taking into
      * consideration the impleentation group that applies.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation grou that applies.
      * @return the weight of the gene/expected outcome taking into consideration
      * the impleentation group that applies.
@@ -289,7 +285,6 @@ public enum Genes {
      * Given an implementation group, this method returns whether the
      * gene/expected outcome applies for it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return true, if the gene/expected outcome applies. Otherwise, false.
      */
@@ -301,7 +296,6 @@ public enum Genes {
      * This method returns the cybersecurity category the gene/expected outcome
      * belongs to.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the cybersecurity category the gene/expected outcome belongs to.
      */
     public Categories getCategory() {
@@ -312,7 +306,6 @@ public enum Genes {
      * This method returns the acronym/very short name of this gene/expected
      * outcome.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the acronym/very short name of this gene/expected outcome.
      */
     public String getAcronym() {
@@ -323,7 +316,6 @@ public enum Genes {
      * This method returns the main purpose of this of this gene/expected
      * outcome.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the main purpose of this of this gene/expected outcome.
      */
     public String getPurpose() {
@@ -334,7 +326,6 @@ public enum Genes {
      * This method returns implementation tips/guidance on which kind of task
      * should be done to achieve the gene/expected outcome.
      *
-     * @author Manuel Domínguez-Dorado
      * @return implementation tips/guidance on which kind of task should be done
      * to achieve the gene/expected outcome.
      */
@@ -346,7 +337,6 @@ public enum Genes {
      * This method returns references to models, framework or papers the
      * information of this gene/expected outcome is based on.
      *
-     * @author Manuel Domínguez-Dorado
      * @return references to models, framework or papers the information of this
      * gene/expected outcome is based on.
      */
@@ -359,7 +349,6 @@ public enum Genes {
      * CyberTOMP proposal, that should lead the implementation of the
      * cybersecurity actions to achieve this gene/expected outcome.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the funcional area, from the ones defined in CyberTOMP proposal,
      * that should lead the implementation of the cybersecurity actions to
      * achieve this gene/expected outcome.
@@ -373,7 +362,6 @@ public enum Genes {
      * cybersecurity category and are applicable for a given implementation
      * group.
      *
-     * @author Manuel Domínguez-Dorado
      * @param category The cybersecurity category whose genes/expected outcomes
      * are required.
      * @param implementationGroup The applicable implementation group.
@@ -394,7 +382,6 @@ public enum Genes {
      * This method returns the list of genes that are applicable for a given
      * implementation group.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return the list of genes that are applicable for a given implementation
      * group.

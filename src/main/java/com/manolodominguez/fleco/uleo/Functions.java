@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.uleo;
 
-import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,6 @@ public enum Functions {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param weightIG1 A float value representing the weight of this
      * cybersecurity function when applying implementation group 1. A number
      * between 0.0 and 1.0.
@@ -94,7 +92,6 @@ public enum Functions {
      * This method returns the weight of this cybersecurity function taking into
      * consideration the impleentation group that applies.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation group that applies.
      * @return the weight of the cybersecurity function taking into
      * consideration the impleentation group that applies.
@@ -106,7 +103,6 @@ public enum Functions {
     /**
      * This method returns the very short name of this function.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the very short name of this function.
      */
     public String getAcronym() {
@@ -116,7 +112,6 @@ public enum Functions {
     /**
      * This method returns the main purpose of this of this function.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the main purpose of this of this function.
      */
     public String getPurpose() {
@@ -127,7 +122,6 @@ public enum Functions {
      * Given an implementation group, this method returns whether the
      * cybersecurity function applies for it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return true, if the cybersecurity function applies. Otherwise, false.
      */
@@ -140,7 +134,6 @@ public enum Functions {
      * cybersecurity categories that applies to that implementation group and
      * belongs to the cybersecurity function.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return a list of cybersecurity categories that applies to that
      * implementation group and belongs to the cybersecurity function.
@@ -159,7 +152,6 @@ public enum Functions {
      * This method returns the list of cybersecurity categories that are
      * applicable for a given implementation group.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return the list of cybersecurity categories that are applicable for a
      * given implementation group

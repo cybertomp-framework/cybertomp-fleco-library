@@ -55,7 +55,6 @@ public class Constraint {
      * This is the constructor of the class. It sets the initial values of all
      * attributes and create a new instance.
      *
-     * @author Manuel Domínguez-Dorado
      * @param operator A comparison operator.
      * @param thresshold A normalized float value, between 0.0 and 1.0, that
      * represents a percentaje between 0% and 100% and is related to the defined
@@ -69,7 +68,6 @@ public class Constraint {
     /**
      * This method returns the the thresshold of this strategic constraint.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the thresshold of this strategic constraint.
      */
     public float getThreshold() {
@@ -79,7 +77,6 @@ public class Constraint {
     /**
      * This method returns the comparison operator of this strategic constraint.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the comparison operator of this strategic constraint.
      */
     public ComparisonOperators getComparisonOperator() {

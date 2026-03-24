@@ -55,8 +55,6 @@ public class RotaryIDGenerator {
     
     /**
      * This method is the constructor of the class. It is create a new instance.
-     *
-     * @author Manuel Domínguez Dorado
      */
     public RotaryIDGenerator() {
         identifier = DEFAULT_ID;
@@ -64,8 +62,6 @@ public class RotaryIDGenerator {
 
     /**
      * This method resets the ID generator to its initial internal value.
-     *
-     * @author Manuel Domínguez Dorado
      */
     public synchronized void reset() {
         identifier = DEFAULT_ID;
@@ -74,7 +70,6 @@ public class RotaryIDGenerator {
     /**
      * This method generates a new ID.
      *
-     * @author Manuel Domínguez Dorado
      * @return the next identifier, as an integer value.
      */
     synchronized public int getNextIdentifier() {

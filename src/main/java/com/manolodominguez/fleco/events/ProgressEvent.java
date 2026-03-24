@@ -64,7 +64,6 @@ public class ProgressEvent extends FLECOEvent {
      * This method is the constrctor of the class.It creates a new instance of
      * ProgressEvent.
      *
-     * @author Manuel Domínguez Dorado
      * @param eventID The unique event identifier.
      * @param eventGenerator The object that generates the event.
      * @param totalTime the total amount of time allowed before finishing the
@@ -93,7 +92,6 @@ public class ProgressEvent extends FLECOEvent {
     /**
      * This method returns the progress percentage advertised by this event.
      *
-     * @author Manuel Domínguez Dorado
      * @return The progress percentage that the event is carrying out and will
      * be received by the listener.
      */
@@ -107,7 +105,6 @@ public class ProgressEvent extends FLECOEvent {
     /**
      * This method returns the current generation of FLECO's population.
      *
-     * @author Manuel Domínguez Dorado
      * @return the current generation of FLECO's population.
      */
     public long getCurrentGeneration() {
@@ -117,7 +114,6 @@ public class ProgressEvent extends FLECOEvent {
     /**
      * This method returns the current FLECO's population's best chromosome.
      *
-     * @author Manuel Domínguez Dorado
      * @return the current FLECO's population's best chromosome.
      */
     public Chromosome getCurrentBestChromosome() {
@@ -127,7 +123,6 @@ public class ProgressEvent extends FLECOEvent {
     /**
      * This method returns whether the FLECO's population has converged or not.
      *
-     * @author Manuel Domínguez Dorado
      * @return true, if the FLECO's population has converged. Otherwise, returns
      * false.
      */
@@ -138,8 +133,6 @@ public class ProgressEvent extends FLECOEvent {
     /**
      * This method prints the information of the event if the current generation
      * is a multiple of 100 (to avoid being too much verbose).
-     *
-     * @author Manuel Domínguez Dorado
      */
     public void print() {
         if ((currentGeneration % 100) == ZERO) {
@@ -151,7 +144,6 @@ public class ProgressEvent extends FLECOEvent {
      * This method return the type of this event. It is one of the enums defined
      * in EventTypes.
      *
-     * @author Manuel Domínguez Dorado
      * @return The type of this event. It is one of the enums defined in
      * EventTypes.
      */

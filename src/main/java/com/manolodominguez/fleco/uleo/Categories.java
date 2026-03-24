@@ -69,7 +69,7 @@ public enum Categories {
     RS_CO((float) 1 / 2, (float) 2 / 10, (float) 3 / 18, Functions.RESPOND, "RS.CO", "Communications"),
     RS_IM((float) 0 / 2, (float) 2 / 10, (float) 5 / 18, Functions.RESPOND, "RS.IM", "Improvements"),
     RS_MI((float) 1 / 2, (float) 3 / 10, (float) 6 / 18, Functions.RESPOND, "RS.MI", "Mitigation"),
-    RS_RP((float) 0 / 2, (float) 2 / 10, (float) 2 / 18, Functions.RESPOND, "RS.RP", "Response planning"),
+    RS_RP((float) 0.0f / 2.0f, (float) 2 / 10, (float) 2 / 18, Functions.RESPOND, "RS.RP", "Response planning"),
     RC_CO((float) 0.0f, (float) 0.0f, (float) 1 / 6, Functions.RECOVER, "RC.CO", "Communications"),
     RC_IM((float) 0.0f, (float) 0.0f, (float) 2 / 6, Functions.RECOVER, "RC.IM", "Improvements"),
     RC_RP((float) 0.0f, (float) 0.0f, (float) 3 / 6, Functions.RECOVER, "RC.RP", "Recovery planning");
@@ -85,7 +85,6 @@ public enum Categories {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param weightIG1 A float value representing the weight of this
      * cybersecurity category when applying implementation group 1. A number
      * between 0.0 and 1.0.
@@ -112,7 +111,6 @@ public enum Categories {
      * This method returns the weight of this cybersecurity category taking into
      * consideration the impleentation group that applies.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation group that applies.
      * @return the weight of the cybersecurity category taking into
      * consideration the impleentation group that applies.
@@ -124,7 +122,6 @@ public enum Categories {
     /**
      * This method returns the very short name of this category.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the very short name of this category.
      */
     public String getAcronym() {
@@ -134,7 +131,6 @@ public enum Categories {
     /**
      * This method returns the main purpose of this of this category.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the main purpose of this of this category.
      */
     public String getPurpose() {
@@ -145,7 +141,6 @@ public enum Categories {
      * This method returns the cybersecurity function the cybersecurity category
      * belongs to.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the cybersecurity function the cybersecurity category belongs to.
      */
     public Functions getFunction() {
@@ -156,7 +151,6 @@ public enum Categories {
      * Given an implementation group, this method returns whether the
      * cybersecurity category applies for it or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return true, if the cybersecurity category applies. Otherwise, false.
      */
@@ -169,7 +163,6 @@ public enum Categories {
      * genes/expected outcomes that applies to that implementation group and
      * belongs to the cybersecurity category.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
      * @return a list of genes/expected outcomes that applies to that
      * implementation group and belongs to the cybersecurity category.
@@ -189,7 +182,6 @@ public enum Categories {
      * a given cybersecurity function and are applicable for a given
      * implementation group.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function The cybersecurity function whose cbyersecurity categories
      * are required.
      * @param implementationGroup The applicable implementation group.
@@ -212,7 +204,6 @@ public enum Categories {
      * given cybersecurity function and are applicable for a given
      * implementation group.
      *
-     * @author Manuel Domínguez-Dorado
      * @param function The cybersecurity function whose cybersecurity categories
      * are required.
      * @param implementationGroup The applicable implementation group.

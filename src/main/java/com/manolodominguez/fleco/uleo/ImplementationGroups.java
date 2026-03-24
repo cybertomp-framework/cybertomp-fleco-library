@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.uleo;
 
-import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +56,6 @@ public enum ImplementationGroups {
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
      *
-     * @author manuel Domínguez-Dorado
      * @param implementationGroupIndex The index of this implementation group,
      * that would be used as array index afterwards.
      */
@@ -68,7 +66,6 @@ public enum ImplementationGroups {
     /**
      * This method returns the index associated to this implementation group.
      *
-     * @author manuel Domínguez-Dorado
      * @return the index associated to this implementation group.
      */
     public int getImplementationGroupIndex() {

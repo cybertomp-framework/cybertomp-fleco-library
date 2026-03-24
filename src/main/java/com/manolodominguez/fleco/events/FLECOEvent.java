@@ -59,7 +59,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
      * This is the constructor of the class that will be called by all
      * subclasses to create a new event in FLECO.
      *
-     * @author Manuel Domínguez Dorado
      * @param instant Every events includes the moment of their generation, in
      * nanoseconds. It allow syncronizing everything that is happening during a
      * simulation.
@@ -75,7 +74,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     /**
      * This method gets the instant in wich the event was generated.
      *
-     * @author Manuel Domínguez Dorado
      * @return the instant in wich the event was generated.
      */
     public Instant getInstant() {
@@ -85,7 +83,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     /**
      * This method gets the event unique identifier.
      *
-     * @author Manuel Domínguez Dorado
      * @return the event unique identifier.
      */
     public long getEventID() {
@@ -95,7 +92,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     /**
      * This method sets the event unique identifier.
      *
-     * @author Manuel Domínguez Dorado
      * @param eventID the event unique identifier.
      */
     public void setEventID(long eventID) {
@@ -106,7 +102,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
      * This method compares the current instance to another instance of
      * FLECOEvent to know the ordinal position of one with respect the other.
      *
-     * @author Manuel Domínguez Dorado
      * @param anotherEvent a FLECOEvent instance to be compared to the current
      * one.
      * @return -1, 0 or 1 depending on whether the current instance is lesser,
@@ -134,7 +129,6 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
      *
      * @return the event type of this event. It will be one of the enum defined
      * in EventTypes.
-     * @author Manuel Domínguez Dorado
      */
     public abstract EventTypes getType();
 }

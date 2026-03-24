@@ -41,7 +41,6 @@ import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,6 @@ public class Chromosome {
      * all its chromosomes to the default allele. It also set the implementation
      * group that will apply.
      *
-     * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation group that applies to the
      * asset that is being considered. According to CyberTOMP proposal,
      * depending on the implementation group, the number of genes in the
@@ -86,7 +84,6 @@ public class Chromosome {
     /**
      * This method returns the allele of the specified gene.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene the gene whose allele is being requested.
      * @return The allele of the specified gene.
      */
@@ -98,7 +95,6 @@ public class Chromosome {
      * This method set the genes and alleles of this chromosome to those
      * specified as a parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param genes The genes and alleles to configure the chromosome.
      */
     public void setGenes(EnumMap<Genes, Alleles> genes) {
@@ -109,7 +105,6 @@ public class Chromosome {
     /**
      * This method returns the genes and alleles of this chromosome.
      *
-     * @author Manuel Domínguez-Dorado
      * @return The genes and alleles of this chromosome.
      */
     public EnumMap<Genes, Alleles> getGenes() {
@@ -120,7 +115,6 @@ public class Chromosome {
      * This method add or update a gene and its respective allele in the
      * chromosome.
      *
-     * @author Manuel Domínguez-Dorado
      * @param gene The gene to be added or udated.
      * @param allele The allele for the specified gene.
      */
@@ -130,8 +124,6 @@ public class Chromosome {
 
     /**
      * This method assigns a random allele to every gene in the chromosome.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void randomizeGenes() {
         for (Genes gene : Genes.values()) {
@@ -147,8 +139,6 @@ public class Chromosome {
 
     /**
      * This method prints in console a beautified version of the chromosome.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void print() {
         EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
@@ -207,7 +197,6 @@ public class Chromosome {
      * This method returns the genes of this chromosome as JSON strings to be
      * treated automatically whenever needed.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the genes of this chromosome as JSON strings.
      */
     public String getGenesAsJSONString() {
@@ -230,8 +219,6 @@ public class Chromosome {
     /**
      * This method prints in console a plain version of the chromosome showing
      * the value of every gene.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void printGenes() {
         EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
@@ -294,7 +281,6 @@ public class Chromosome {
      * includes information to compare the chromosome to a previous initial
      * state.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus A chromosome representing an initial cybersecurity
      * status the current chromosome is going to be compared to.
      */
@@ -361,7 +347,6 @@ public class Chromosome {
      * This method returns a text explaining the evolution between two alleles
      * specified as parameters.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialAllele The initial allele to be compared.
      * @param currentAllele The current/final allele to be compared.
      * @return A text explaining the evolution between two alleles specified as
@@ -377,7 +362,6 @@ public class Chromosome {
     /**
      * This method returns the fitness value.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the chromosome's fitness.
      */
     public float getFitness() {
@@ -387,7 +371,6 @@ public class Chromosome {
     /**
      * This method computes the chromosome's fitness.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus A chromosome representing an initial cybersecurity
      * status.
      * @param strategicConstraints A ser of strategic constraints to be takein
@@ -401,7 +384,6 @@ public class Chromosome {
      * This method returns the fitness related to the optimization objective 1
      * (compliance with the defined strategic constraints).
      *
-     * @author Manuel Domínguez-Dorado
      * @return the fitness related to the optimization objective 1 (compliance
      * with the defined strategic constraints).
      */
@@ -420,7 +402,6 @@ public class Chromosome {
      * chromosome in relation to the total number of constraints is returned as
      * a normalized value between 0.0 and 1.0.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the fitness related to the optimization objective 1 (compliance
      * with the defined strategic constraints).
      */

@@ -48,7 +48,6 @@ public interface IFLECOProgressEventListener extends EventListener {
     /**
      * This method, when implemented, will capture progress events.
      *
-     * @author Manuel Domínguez Dorado
      * @param progressEvent The simulation event received.
      */
     public void onProgressEventReceived(ProgressEvent progressEvent);
