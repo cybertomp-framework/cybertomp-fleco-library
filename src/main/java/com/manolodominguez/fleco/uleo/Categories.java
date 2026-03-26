@@ -50,29 +50,29 @@ import org.slf4j.LoggerFactory;
  * @author manuel Domínguez-Dorado
  */
 public enum Categories {
-    ID_AM((float) 8 / 12, (float) 11 / 24, (float) 11 / 40, Functions.IDENTIFY, "ID.AM", "Asset management"),
-    ID_BE((float) 0 / 12, (float) 1 / 24, (float) 6 / 40, Functions.IDENTIFY, "ID.BE", "Business environment"),
-    ID_GV((float) 1 / 12, (float) 3 / 24, (float) 5 / 40, Functions.IDENTIFY, "ID.GV", "Governance"),
-    ID_RA((float) 1 / 12, (float) 4 / 24, (float) 9 / 40, Functions.IDENTIFY, "ID.RA", "Risk assessment"),
-    ID_RM((float) 0 / 12, (float) 1 / 24, (float) 4 / 40, Functions.IDENTIFY, "ID.RM", "Risk management strategy"),
-    ID_SC((float) 2 / 12, (float) 4 / 24, (float) 5 / 40, Functions.IDENTIFY, "ID.SC", "Supply chain risk management"),
-    PR_AC((float) 7 / 29, (float) 11 / 61, (float) 14 / 80, Functions.PROTECT, "PR.AC", "Identity management, authentication and access control"),
-    PR_AT((float) 1 / 29, (float) 4 / 61, (float) 4 / 80, Functions.PROTECT, "PR.AT", "Awareness and training"),
-    PR_DS((float) 2 / 29, (float) 6 / 61, (float) 10 / 80, Functions.PROTECT, "PR.DS", "Data security"),
-    PR_IP((float) 8 / 29, (float) 18 / 61, (float) 24 / 80, Functions.PROTECT, "PR.IP", "Information protection processes and procedures"),
-    PR_MA((float) 6 / 29, (float) 15 / 61, (float) 17 / 80, Functions.PROTECT, "PR.MA", "Maintenance"),
-    PR_PT((float) 5 / 29, (float) 7 / 61, (float) 11 / 80, Functions.PROTECT, "PR.PT", "Protective technology"),
-    DE_AE((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT, "DE.AE", "Anomalies and events"),
-    DE_CM((float) 2 / 4, (float) 6 / 12, (float) 11 / 23, Functions.DETECT, "DE.CM", "Security continuous monitoring"),
-    DE_DP((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT, "DE.DP", "Detection processes"),
-    RS_AN((float) 0 / 2, (float) 1 / 10, (float) 2 / 18, Functions.RESPOND, "RS.AN", "Analysis"),
-    RS_CO((float) 1 / 2, (float) 2 / 10, (float) 3 / 18, Functions.RESPOND, "RS.CO", "Communications"),
-    RS_IM((float) 0 / 2, (float) 2 / 10, (float) 5 / 18, Functions.RESPOND, "RS.IM", "Improvements"),
-    RS_MI((float) 1 / 2, (float) 3 / 10, (float) 6 / 18, Functions.RESPOND, "RS.MI", "Mitigation"),
-    RS_RP((float) 0.0f / 2.0f, (float) 2 / 10, (float) 2 / 18, Functions.RESPOND, "RS.RP", "Response planning"),
-    RC_CO((float) 0.0f, (float) 0.0f, (float) 1 / 6, Functions.RECOVER, "RC.CO", "Communications"),
-    RC_IM((float) 0.0f, (float) 0.0f, (float) 2 / 6, Functions.RECOVER, "RC.IM", "Improvements"),
-    RC_RP((float) 0.0f, (float) 0.0f, (float) 3 / 6, Functions.RECOVER, "RC.RP", "Recovery planning");
+    ID_AM(8f / 12f, 11f / 24f, 11f / 40f, Functions.IDENTIFY, "ID.AM", "Asset management"),
+    ID_BE(0f / 12f, 1f / 24f, 6f / 40f, Functions.IDENTIFY, "ID.BE", "Business environment"),
+    ID_GV(1f / 12f, 3f / 24f, 5f / 40f, Functions.IDENTIFY, "ID.GV", "Governance"),
+    ID_RA(1f / 12f, 4f / 24f, 9f / 40f, Functions.IDENTIFY, "ID.RA", "Risk assessment"),
+    ID_RM(0f / 12f, 1f / 24f, 4f / 40f, Functions.IDENTIFY, "ID.RM", "Risk management strategy"),
+    ID_SC(2f / 12f, 4f / 24f, 5f / 40f, Functions.IDENTIFY, "ID.SC", "Supply chain risk management"),
+    PR_AC(7f / 29f, 11f / 61f, 14f / 80f, Functions.PROTECT, "PR.AC", "Identity management, authentication and access control"),
+    PR_AT(1f / 29f, 4f / 61f, 4f / 80f, Functions.PROTECT, "PR.AT", "Awareness and training"),
+    PR_DS(2f / 29f, 6f / 61f, 10f / 80f, Functions.PROTECT, "PR.DS", "Data security"),
+    PR_IP(8f / 29f, 18f / 61f, 24f / 80f, Functions.PROTECT, "PR.IP", "Information protection processes and procedures"),
+    PR_MA(6f / 29f, 15f / 61f, 17f / 80f, Functions.PROTECT, "PR.MA", "Maintenance"),
+    PR_PT(5f / 29f, 7f / 61f, 11f / 80f, Functions.PROTECT, "PR.PT", "Protective technology"),
+    DE_AE(1f / 4f, 3f / 12f, 6f / 23f, Functions.DETECT, "DE.AE", "Anomalies and events"),
+    DE_CM(2f / 4f, 6f / 12f, 11f / 23f, Functions.DETECT, "DE.CM", "Security continuous monitoring"),
+    DE_DP(1f / 4f, 3f / 12f, 6f / 23f, Functions.DETECT, "DE.DP", "Detection processes"),
+    RS_AN(0f / 2f, 1f / 10f, 2f / 18f, Functions.RESPOND, "RS.AN", "Analysis"),
+    RS_CO(1f / 2f, 2f / 10f, 3f / 18f, Functions.RESPOND, "RS.CO", "Communications"),
+    RS_IM(0f / 2f, 2f / 10f, 5f / 18f, Functions.RESPOND, "RS.IM", "Improvements"),
+    RS_MI(1f / 2f, 3f / 10f, 6f / 18f, Functions.RESPOND, "RS.MI", "Mitigation"),
+    RS_RP(0f / 2f, 2f / 10f, 2f / 18f, Functions.RESPOND, "RS.RP", "Response planning"),
+    RC_CO(0f, 0f, 1f / 6f, Functions.RECOVER, "RC.CO", "Communications"),
+    RC_IM(0f, 0f, 2f / 6f, Functions.RECOVER, "RC.IM", "Improvements"),
+    RC_RP(0f, 0f, 3f / 6f, Functions.RECOVER, "RC.RP", "Recovery planning");
 
     private final float weights[] = new float[3];
     private Functions function = Functions.DETECT;
@@ -80,7 +80,7 @@ public enum Categories {
     private String purpose = "";
 
     private final Logger logger = LoggerFactory.getLogger(Categories.class);
-    
+
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.

@@ -47,18 +47,18 @@ import org.slf4j.LoggerFactory;
  * @author manuel Domínguez-Dorado
  */
 public enum Functions {
-    IDENTIFY((float) 4 / 15, (float) 6 / 20, (float) 6 / 23, "ID", "Develop an organizational understanding to manage cybersecurity risk to systems, people, assets, data, and capabilities."),
-    PROTECT((float) 6 / 15, (float) 6 / 20, (float) 6 / 23, "PR", "Develop and implement appropriate safeguards to ensure delivery of critical services."),
-    DETECT((float) 3 / 15, (float) 3 / 20, (float) 3 / 23, "DE", "Develop and implement appropriate activities to identify the occurrence of a cybersecurity event."),
-    RESPOND((float) 2 / 15, (float) 5 / 20, (float) 5 / 23, "RS", "Develop and implement appropriate activities to take action regarding a detected cybersecurity incident."),
-    RECOVER((float) 0 / 15, (float) 0 / 20, (float) 3 / 23, "RC", "Develop and implement appropriate activities to maintain plans for resilience and to restore any capabilities or services that were impaired due to a cybersecurity incident");
+    IDENTIFY(4f / 15f, 6f / 20f, 6f / 23f, "ID", "Develop an organizational understanding to manage cybersecurity risk to systems, people, assets, data, and capabilities."),
+    PROTECT(6f / 15f, 6f / 20f, 6f / 23f, "PR", "Develop and implement appropriate safeguards to ensure delivery of critical services."),
+    DETECT(3f / 15f, 3f / 20f, 3f / 23f, "DE", "Develop and implement appropriate activities to identify the occurrence of a cybersecurity event."),
+    RESPOND(2f / 15f, 5f / 20f, 5f / 23f, "RS", "Develop and implement appropriate activities to take action regarding a detected cybersecurity incident."),
+    RECOVER(0f / 15f, 0f / 20f, 3f / 23f, "RC", "Develop and implement appropriate activities to maintain plans for resilience and to restore any capabilities or services that were impaired due to a cybersecurity incident");
 
     private float weights[] = new float[3];
     private String acronym = "";
     private String purpose = "";
 
     private final Logger logger = LoggerFactory.getLogger(Functions.class);
-    
+
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
