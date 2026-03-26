@@ -46,7 +46,7 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class InitialStatusForIG2 extends Chromosome {
+public final class InitialStatusForIG2 extends Chromosome {
 
     /**
      * This is the constuctor of the class. It creates a new initial

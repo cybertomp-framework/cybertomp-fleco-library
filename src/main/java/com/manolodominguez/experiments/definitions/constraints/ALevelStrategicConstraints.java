@@ -48,7 +48,7 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class ALevelStrategicConstraints extends StrategicConstraints {
+public final class ALevelStrategicConstraints extends StrategicConstraints {
 
     /**
      * This is the constuctor of the class. It creates a new instance and adds a

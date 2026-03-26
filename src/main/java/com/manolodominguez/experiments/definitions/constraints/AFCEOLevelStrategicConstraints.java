@@ -52,7 +52,7 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class AFCEOLevelStrategicConstraints extends StrategicConstraints {
+public final class AFCEOLevelStrategicConstraints extends StrategicConstraints {
 
     /**
      * This is the constuctor of the class. It creates a new instance and adds
