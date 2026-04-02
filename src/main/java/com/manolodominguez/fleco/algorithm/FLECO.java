@@ -47,43 +47,32 @@ import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import com.manolodominguez.fleco.events.IFLECOProgressEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The present class implements the FLECO (Fast, Lightweight, and Efficient
- * Cybersecurity Optimization) Adaptive, Constrained, and Multi-objective
- * Genetic Algorithm. This genetic algorithm is designed to assist the Asset's
- * Cybersecurity Committee (ACC) in making decisions during the application of
- * CyberTOMP(1), aimed at managing comprehensive cybersecurity at both tactical
- * and operational levels.
- *
- * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
- * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
- * manage asset-focused cybersecurity from tactical and operational levels. IEEE
- * Access, 10, 122454-122485.
+ * This implements the FLECO (Fast, Lightweight, and EfficientCybersecurity
+ * Optimization) adaptive and constrained genetic algorithm. This genetic
+ * algorithm is designed to assist the asset cybersecurity team in making
+ * decisions during the application of CyberTOMP® framework.
  *
  * @author Manuel Domínguez Dorado
  */
 public class FLECO {
 
+    private static final Logger logger = LoggerFactory.getLogger(FLECO.class);
+
+    private final int maxAvailableSeconds;
+    private final int initialPopulation;
+
     private float mutationProbability;
     private float crossoverProbability;
-    private ImplementationGroups implementationGroup;
-    private int maxAvailableSeconds;
-    private int initialPopulation;
     private Population population;
-    private StrategicConstraints strategicConstraints;
-    private Chromosome initialStatus;
     private float usedTime;
     private int usedGenerations;
     private IFLECOProgressEventListener progressEventListener;
-    private RotaryIDGenerator rotaryIDGenerator;
-
-    private final Logger logger = LoggerFactory.getLogger(FLECO.class);
+    private final RotaryIDGenerator rotaryIDGenerator;
 
     private static final float STAGNATION_THRESHOLD_PERCENTAGE = 0.025f;
     private static final float DEEP_STAGNATION_THRESHOLD_FACTOR = 1.25f;
@@ -112,19 +101,40 @@ public class FLECO {
      * @param strategicConstraints A set of constraints over the asset,
      * functions, categories or expected outcomes.
      */
-    public FLECO(int initialPopulation, int maxAvailableSeconds, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
-        this.implementationGroup = implementationGroup;
-        this.initialStatus = initialStatus;
-        this.strategicConstraints = strategicConstraints;
+    public FLECO(int initialPopulation, int maxAvailableSeconds, float crossoverProbability,
+            ImplementationGroups implementationGroup, Chromosome initialStatus,
+            StrategicConstraints strategicConstraints) {
+
+        if (initialPopulation <= 0 || maxAvailableSeconds <= 0) {
+            logger.error(
+                    "Invalid constructor arguments: initialPopulation={}, maxAvailableSeconds={}",
+                    initialPopulation, maxAvailableSeconds
+            );
+            throw new IllegalArgumentException("Population size and time must be positive.");
+        }
+
+        if (implementationGroup == null || initialStatus == null || strategicConstraints == null) {
+            logger.error(
+                    "Null argument detected: implementationGroup={}, initialStatus={}, strategicConstraints={}",
+                    implementationGroup, initialStatus, strategicConstraints
+            );
+            throw new IllegalArgumentException("Arguments must not be null.");
+        }
+
         this.initialPopulation = initialPopulation;
         this.maxAvailableSeconds = maxAvailableSeconds;
-        this.mutationProbability = 1.0f / (Genes.getGenesFor(this.implementationGroup).size());
         this.crossoverProbability = crossoverProbability;
-        usedTime = 0.0f;
-        usedGenerations = 0;
-        population = new Population(this.initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
-        rotaryIDGenerator = new RotaryIDGenerator();
-        progressEventListener = null;
+
+        // Mutation probability depends on the number of genes for the implementation group
+        this.mutationProbability = 1.0f / Genes.getGenesFor(implementationGroup).size();
+
+        this.population = new Population(initialPopulation, implementationGroup, initialStatus, strategicConstraints);
+        this.rotaryIDGenerator = new RotaryIDGenerator();
+
+        // Explicit initializations preserved for the sake of clarity
+        this.usedTime = 0.0f;
+        this.usedGenerations = 0;
+        this.progressEventListener = null;
     }
 
     /**
@@ -134,8 +144,8 @@ public class FLECO {
      */
     public void setProgressEventListener(IFLECOProgressEventListener progressEventListener) {
         if (this.progressEventListener != null) {
-            logger.error("FLECO already has a progress event listener. Only one is allowed.");
-            throw new IllegalArgumentException("FLECO already has a progress event listener. Only one is allowed.");
+            logger.error("Attempt to set a second progress listener. Existing: {}", this.progressEventListener);
+            throw new IllegalStateException("Only one progress listener is allowed.");
         }
         this.progressEventListener = progressEventListener;
     }
@@ -148,95 +158,121 @@ public class FLECO {
     public void evolve() {
         int currentGeneration = 0;
         float currentBestFitness = 0.0f;
-        int mutationIncreasingFactor = 1;
+        int mutationIncreasingFactor = DEFAULT_MUTATION_INCREASING_FACTOR;
+
         float stagnationThreshold = maxAvailableSeconds * STAGNATION_THRESHOLD_PERCENTAGE;
+
         boolean seemsALocalMinimum = false;
         boolean isDeeplyStagnated = false;
-        Temporal begin = Instant.now();
-        Temporal end;
-        Temporal latestBestFitnessChange = Instant.now();
-        Duration duration;
+
+        Instant begin = Instant.now();
+        Instant latestBestFitnessChange = begin;
+
         usedTime = 0.0f;
+
         while (!hasToFinish(begin, isDeeplyStagnated)) {
-            // The probability of being in a local minimum is raised each time 
-            // the best fitness remains constant. Otherwise, the probability is 
-            // reset to its default value.
-            if (currentBestFitness > population.get(BEST_CHROMOSOME_INDEX).getFitness()) {
-                currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
+
+            // Cache the best chromosome to avoid repeated lookups
+            Chromosome best = population.get(BEST_CHROMOSOME_INDEX);
+            float bestFitness = best.getFitness();
+
+            // Update the best fitness observed so far
+            if (bestFitness > currentBestFitness) {
+                currentBestFitness = bestFitness;
                 latestBestFitnessChange = Instant.now();
             }
-            // Once the cumulative probability of being in a local minimum 
-            // surpasses the predetermined threshold, the algorithm is 
-            // considered to be in a local minimum, requiring an escape plan.
-            // When this period reach the double, it is considered to be too
-            // much time.
-            Duration stagnationTime = Duration.between(latestBestFitnessChange, Instant.now());
-            seemsALocalMinimum = false;
-            isDeeplyStagnated = false;
-            if (stagnationTime.get(ChronoUnit.SECONDS) > stagnationThreshold) {
-                seemsALocalMinimum = true;
-                if (stagnationTime.get(ChronoUnit.SECONDS) > (stagnationThreshold * DEEP_STAGNATION_THRESHOLD_FACTOR)) {
-                    isDeeplyStagnated = true;
-                }
-            }
-            // If the algorithm is in a local minimum, it amplifies the mutation
-            // rate to the predefined higher value; otherwise, it resets the 
-            // rate to the default value.
-            if (seemsALocalMinimum) {
-                mutationIncreasingFactor = HIGHER_MUTATION_INCREASING_FACTOR;
-            } else {
-                mutationIncreasingFactor = DEFAULT_MUTATION_INCREASING_FACTOR;
-            }
-            // Calculate the fitness and arrange the population accordingly. 
-            // Reduce the population removing the worst individuals.
+
+            // Compute stagnation time in seconds
+            long stagnationSeconds
+                    = Duration.between(latestBestFitnessChange, Instant.now()).getSeconds();
+
+            // Determine whether the algorithm seems to be stuck in a local minimum
+            seemsALocalMinimum = stagnationSeconds > stagnationThreshold;
+
+            // Determine whether stagnation is severe (deep stagnation)
+            isDeeplyStagnated
+                    = stagnationSeconds > (stagnationThreshold * DEEP_STAGNATION_THRESHOLD_FACTOR);
+
+            // Adjust mutation factor depending on stagnation
+            mutationIncreasingFactor = seemsALocalMinimum
+                    ? HIGHER_MUTATION_INCREASING_FACTOR
+                    : DEFAULT_MUTATION_INCREASING_FACTOR;
+
+            // Calculate the fitness and arrange the population accordingly
             population.selectBestAdapted();
-            // Spread progress event.
-            if (progressEventListener != null) {
-                long totalTime = (long) maxAvailableSeconds * 1000;
-                long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
-                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(BEST_CHROMOSOME_INDEX), population.hasConverged());
-                progressEventListener.onProgressEventReceived(event);
-            }
-            // If the algorithm forecast it could be trapped in a local minimum,
-            // injects a predefined quantity of random chromosomes into the 
-            // population to increase diversity. Moreover, if it has been 
-            // stagnated too much time without complying with the strategic
-            // requiremens, it performs a soft reset removing the best 50% 
-            // individuals.
+
+            // Spread progress event
+            notifyProgress(begin, currentGeneration, best);
+
+            // Escape strategies when stagnation is detected
             if (seemsALocalMinimum) {
-                if (isDeeplyStagnated) {
-                    if (!population.hasConverged()) {
-                        population.softReset();
-                        currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
-                        latestBestFitnessChange = Instant.now();
-                    }
+
+                // If deeply stagnated and not converged, perform a soft reset
+                if (isDeeplyStagnated && !population.hasConverged()) {
+                    population.softReset();
+                    currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
+                    latestBestFitnessChange = Instant.now();
                 }
+
+                // Inject additional random chromosomes to increase diversity
                 population.populateRandomly((int) (initialPopulation * POPULATION_INCREASING_FACTOR));
             }
-            // Apply a mutation to the population with a predefined probability,
-            // which can be raised if the algorithm is in a local minimum.
+
+            // Apply mutation with an adaptive probability
             population.mutate(mutationProbability * mutationIncreasingFactor);
-            // Perform a crossover on the population.
+
+            // Perform a crossover on the population
             population.crossover(crossoverProbability);
-            // To maintain stable the number of individuals in the population,
-            // complete the population adding some random individuals if needed.
+
+            // Complete the population adding random individuals if needed
             population.populateRandomly();
-            // To prevent uncontrolled growth, reduce the population to the 
-            // default number of chromosomes in case it is higher.
+
+            // Reduce the population to the default number of chromosomes
             population.reduceTo(initialPopulation);
-            // Increases the generation number
+
+            // Increase the generation number
             currentGeneration++;
         }
-        end = Instant.now();
-        duration = Duration.between(begin, end);
-        usedTime = (duration.get(ChronoUnit.SECONDS) + (duration.get(ChronoUnit.NANOS) / 1000000000.0f));
+
+        // Compute total execution time
+        Duration duration = Duration.between(begin, Instant.now());
+        usedTime = duration.toMillis() / 1000f;
         usedGenerations = currentGeneration;
+    }
+
+    /**
+     * Notifies the registered progress event listener about the current
+     * progress.
+     *
+     * @param begin The starting point used as reference of time.
+     * @param currentGeneration The generation currently being evolved.
+     * @param best The best chromosome of the current population.
+     */
+    private void notifyProgress(Instant begin, int currentGeneration, Chromosome best) {
+        if (progressEventListener == null) {
+            return;
+        }
+
+        long totalTime = maxAvailableSeconds * 1000L;
+        long currentTime = Instant.now().toEpochMilli() - begin.toEpochMilli();
+
+        ProgressEvent event = new ProgressEvent(
+                this,
+                rotaryIDGenerator.getNextIdentifier(),
+                totalTime,
+                currentTime,
+                currentGeneration,
+                best,
+                population.hasConverged()
+        );
+
+        progressEventListener.onProgressEventReceived(event);
     }
 
     /**
      * This method returns the number of seconds the execution of FLECO has
      * lasted.
-     * 
+     *
      * @return the number of seconds the execution of FLECO has lasted.
      */
     public float getUsedTime() {
@@ -246,7 +282,7 @@ public class FLECO {
     /**
      * This method returns the number of generations the execution of FLECO has
      * required.
-     * 
+     *
      * @return the number of generations the execution of FLECO has required.
      */
     public int getUsedGenerations() {
@@ -254,7 +290,7 @@ public class FLECO {
     }
 
     /**
-     * This method check whether the conditions to finish FLECO algorithm exist
+     * This method checks whether the conditions to finish FLECO algorithm exist
      * or not.
      *
      * @param begin the time when the algorithm started to evolve the
@@ -262,9 +298,13 @@ public class FLECO {
      * @return true, if the conditions to finish FLECO execution exist.
      * Otherwise return false.
      */
-    private boolean hasToFinish(Temporal begin, boolean isDeeplyStagnated) {
-        Duration duration = Duration.between(begin, Instant.now());
-        if (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds)) {
+    private boolean hasToFinish(Instant begin, boolean isDeeplyStagnated) {
+        long elapsed = Duration.between(begin, Instant.now()).getSeconds();
+
+        if (population.hasConverged()) {
+            return true;
+        }
+        if (elapsed > maxAvailableSeconds) {
             return true;
         }
         return isDeeplyStagnated && population.hasConverged();
