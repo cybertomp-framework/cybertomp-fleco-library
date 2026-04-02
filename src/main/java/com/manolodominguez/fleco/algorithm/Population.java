@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * This class implements a population. A set of chromosomes and the
  * corresponding methods to make the required operations.
  *
- * @author Manuel Domínguez-Dorado
+ * @author Manuel
  */
 public class Population extends CopyOnWriteArrayList<Chromosome> {
 
@@ -67,13 +67,11 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     private StrategicConstraints strategicConstraints;
     private boolean converged;
 
-    private final Logger logger = LoggerFactory.getLogger(Population.class);
+    private static final Logger logger = LoggerFactory.getLogger(Population.class);
 
     /**
-     * This is the constructor of the class, which initializes the population
-     * parameters and generates some initial chromosomes, including specialized
-     * ones derived from the initial cybersecurity status and the defined
-     * strategic objectives.
+     * Constructor. Initializes the population and generates initial
+     * chromosomes, including those derived from strategic constraints.
      *
      * @param initialNumberOfChromosomes The initial number of chromosomes in
      * the population.
@@ -83,33 +81,48 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * status of the asset.
      * @param strategicConstraints A set of strategic cybersecurity constraints.
      */
-    public Population(int initialNumberOfChromosomes, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+    public Population(int initialNumberOfChromosomes, ImplementationGroups implementationGroup,
+            Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+
         super();
+
+        if (initialNumberOfChromosomes <= 0) {
+            logger.error("Invalid initialNumberOfChromosomes: {}", initialNumberOfChromosomes);
+            throw new IllegalArgumentException("initialNumberOfChromosomes must be greater than zero.");
+        }
+
+        if (implementationGroup == null || initialStatus == null || strategicConstraints == null) {
+            logger.error(
+                    "Null argument detected: implementationGroup={}, initialStatus={}, strategicConstraints={}",
+                    implementationGroup, initialStatus, strategicConstraints
+            );
+            throw new IllegalArgumentException("Arguments must not be null.");
+        }
+
         this.initialNumberOfChromosomes = initialNumberOfChromosomes;
         this.implementationGroup = implementationGroup;
         this.initialStatus = initialStatus;
         this.strategicConstraints = strategicConstraints;
-        // Add the initial cybersecurity status as a chromosome in the 
-        // population
-        add(initialStatus);
-        // Depending on the strategic constraints, several additional 
-        // chromosomes can be inferred that enhances the quality of the 
-        // population.
-        addAll(strategicConstraints.generatePrecandidatesBasedOn(initialStatus));
+
+        // Add the initial cybersecurity status as a chromosome
+        super.add(initialStatus);
+
+        // Add precandidates derived from strategic constraints
+        super.addAll(strategicConstraints.generatePrecandidatesBasedOn(initialStatus));
+
         computeFitnessAndSort();
         fitnessAverage = 0.0f;
         converged = false;
-        // Complete the population with random chromosomes until the initial 
-        // number of chromosomes are reached.
+
+        // Complete population with random chromosomes
         populateRandomly();
-        // Reduce the population, if neccesary, to have exactly the initial 
-        // number of chromosomes.
+
+        // Ensure exact initial size
         reduceTo(this.initialNumberOfChromosomes);
     }
 
     /**
-     * This class insert new random chromosomes in the population until the
-     * defined initial number of chromosomes are reached.
+     * Inserts random chromosomes until the population reaches its initial size.
      */
     public final void populateRandomly() {
         while (size() < initialNumberOfChromosomes) {
@@ -121,11 +134,9 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     }
 
     /**
-     * This class randomly generates the specified number of chromosomes, and
-     * insert them in the population, independently on whether the resulting
-     * population's size is greater than the initial number of chromosomes or
-     * not. It is used to enlarge the population's size under certain
-     * circumstances.
+     * Inserts a specific number of random chromosomes, regardless of final
+     * size.
+     *
      * @param additionalChromosomes the number of random chromosomes to add to
      * the population.
      */
@@ -140,241 +151,245 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     }
 
     /**
-     * This method select the established percentage of the population's best
-     * individuals as parents for the next generation, removing the twins if
-     * they exist. It discards the rest.
+     * Selects the best-adapted individuals, removes twins, and keeps the top
+     * 20%.
      */
     public void selectBestAdapted() {
-        // First it compute fitness and sort the population based on it.
+
+        // Compute fitness and sort population
         computeFitnessAndSort();
-        // Remove twins
-        CopyOnWriteArrayList<Chromosome> twinsFree = new CopyOnWriteArrayList<>();
-        twinsFree.addAll(this);
-        for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            boolean isTwin = true;
+
+        // Remove twins (duplicate chromosomes)
+        CopyOnWriteArrayList<Chromosome> twinsFree = new CopyOnWriteArrayList<>(this);
+
+        for (Chromosome chromosome : this) {
             int instances = 0;
-            for (Chromosome otherChromosome : twinsFree.toArray(new Chromosome[0])) {
-                isTwin = true;
-                for (Genes gene : chromosome.getGenes().keySet()) {
-                    if (chromosome.getAllele(gene) != otherChromosome.getAllele(gene)) {
-                        isTwin = false;
-                        break;
-                    }
-                }
-                if (isTwin) {
+
+            for (Chromosome other : twinsFree) {
+                if (areTwins(chromosome, other)) {
                     instances++;
                     if (instances > 1) {
-                        twinsFree.remove(otherChromosome);
+                        twinsFree.remove(other);
                     }
                 }
             }
         }
+
         if (!twinsFree.isEmpty()) {
             clear();
             addAll(twinsFree);
         }
+
         sort(new ChromosomeComparator());
-        // 1/5 of the current population is selected for reproduction in the 
-        // next generation (4/5 are discarded).
-        int thresshold = size() * 1 / 5;
+
+        // Select top 20% of the population
+        int threshold = size() / 5;
         CopyOnWriteArrayList<Chromosome> bestAdapted = new CopyOnWriteArrayList<>();
-        for (int i = 0; i <= thresshold; i++) {
+
+        for (int i = 0; i <= threshold && i < size(); i++) {
             bestAdapted.add(get(i));
         }
+
         if (!bestAdapted.isEmpty()) {
             clear();
             addAll(bestAdapted);
         }
+
         sort(new ChromosomeComparator());
     }
 
     /**
-     * This method generate mutated chromosomes from the current population. It
-     * goes across all genes of each chromosome applying a mutation when
-     * applicable due to the defiend mutation rate.
-     * 
-     * @param mutationProbablity the probability that a chromosome is mutated.
+     * Helper method to determine whether two chromosomes are identical.
      */
-    public void mutate(float mutationProbablity) {
+    private boolean areTwins(Chromosome a, Chromosome b) {
+        for (Genes gene : a.getGenes().keySet()) {
+            if (a.getAllele(gene) != b.getAllele(gene)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Generates mutated chromosomes based on mutation probability.
+     *
+     * @param mutationProbability the probability that a chromosome is mutated.
+     */
+    public void mutate(float mutationProbability) {
+
         Alleles[] allelesArray = Alleles.values();
         CopyOnWriteArrayList<Chromosome> mutatedChromosomes = new CopyOnWriteArrayList<>();
-        for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            // A new chromosome is created as a copy the current one.
-            Chromosome mutatedChromosome = new Chromosome(implementationGroup);
-            mutatedChromosome.setGenes(chromosome.getGenes());
-            int randomAllele = 0;
-            boolean mutated = false;
-            // All genes of such chromosome are reviewed
-            for (Genes gene : mutatedChromosome.getGenes().keySet()) {
+
+        for (Chromosome chromosome : this) {
+
+            Chromosome mutated = new Chromosome(implementationGroup);
+            mutated.setGenes(chromosome.getGenes());
+
+            boolean mutatedFlag = false;
+
+            for (Genes gene : mutated.getGenes().keySet()) {
                 if (gene.appliesToIG(implementationGroup)) {
-                    // If the mutation probability recommends to mutate the 
-                    // chromosome
-                    if (Math.random() < mutationProbablity) {
-                        // Tag the chromosome as mutated. Non mutated 
-                        // chromosomes are discarded ath the end because they ç
-                        // are twins.
-                        mutated = true;
-                        // Repeat until mutation is effectively done.
-                        while (chromosome.getAllele(gene) == mutatedChromosome.getAllele(gene)) {
-                            // Select the allele
-                            randomAllele = ThreadLocalRandom.current().nextInt(0, allelesArray.length);
-                            // Update the allele for the mutated gene
-                            mutatedChromosome.updateAllele(gene, allelesArray[randomAllele]);
-                        }
+
+                    if (ThreadLocalRandom.current().nextFloat() < mutationProbability) {
+                        mutatedFlag = true;
+
+                        // Ensure allele actually changes
+                        Alleles newAllele;
+                        do {
+                            newAllele = allelesArray[ThreadLocalRandom.current().nextInt(allelesArray.length)];
+                        } while (newAllele == mutated.getAllele(gene));
+
+                        mutated.updateAllele(gene, newAllele);
                     }
                 }
             }
-            if (mutated) {
-                mutatedChromosomes.add(mutatedChromosome);
+
+            if (mutatedFlag) {
+                mutatedChromosomes.add(mutated);
             }
         }
+
         if (!mutatedChromosomes.isEmpty()) {
             addAll(mutatedChromosomes);
         }
     }
 
     /**
-     * This method generate chromosomes by applying a crossover int the current
-     * population. For each time a crossover applies, a new couple of cromosome
-     * are created whose genes are exchanged from a random point to the end of
-     * the chromosomes or from the beginning of the chromosome to the crossing
-     * point, randomly.
+     * Applies crossover to the population.
      *
-     * @param crossoverProbability
+     * FIXED (2026/04/02): Corrected bug where random selection always returned
+     * 0.
+     *
+     * @param crossoverProbability Probability (0.0–1.0) that a crossover is
+     * applied to each chromosome pair during evolution.
      */
     public void crossover(float crossoverProbability) {
-        Chromosome chromosomeA = new Chromosome(implementationGroup);
-        Chromosome chromosomeB = new Chromosome(implementationGroup);
+
         CopyOnWriteArrayList<Chromosome> crossedChromosomes = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < (size() - 1); i += 2) {
-            // For each chromosome in the population, if the possibility of 
-            // being applied a crossover is met, a couple of chromosomes are 
-            // cloned from two chromosomes of the current population.
-            if (Math.random() < crossoverProbability) {
-                CopyOnWriteArrayList<Genes> genesForTheNewChromosome = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < size() - 1; i += 2) {
+
+            if (ThreadLocalRandom.current().nextFloat() < crossoverProbability) {
+
+                Chromosome chromosomeA = new Chromosome(implementationGroup);
+                Chromosome chromosomeB = new Chromosome(implementationGroup);
+
                 chromosomeA.setGenes(get(i).getGenes());
                 chromosomeB.setGenes(get(i + 1).getGenes());
+
+                CopyOnWriteArrayList<Genes> genesForCrossover = new CopyOnWriteArrayList<>();
+
                 for (Genes gene : chromosomeA.getGenes().keySet()) {
                     if (gene.appliesToIG(implementationGroup)) {
-                        genesForTheNewChromosome.add(gene);
+                        genesForCrossover.add(gene);
                     }
                 }
-                // Randomly select one crossing point in the chromosome.
-                int crossoverPoint = ThreadLocalRandom.current().nextInt(0, genesForTheNewChromosome.size());
-                // Ramdomly select whether the crossover will be from the 
-                // beginning of the chromosome to the crossing point or from the 
-                // crossing point to the end of the chromosome.
-                boolean beginningIsTheAnchorPoint = (ThreadLocalRandom.current().nextInt(0, 1) == 0);
-                if (beginningIsTheAnchorPoint) {
-                    // Genes from chromosome A and B are exchanged from the 
-                    // beginning of the chromosome to the crossing point.
-                    for (int j = crossoverPoint; j < genesForTheNewChromosome.size(); j++) {
-                        chromosomeA.updateAllele(genesForTheNewChromosome.get(j), get(i + 1).getAllele(genesForTheNewChromosome.get(j)));
-                        chromosomeB.updateAllele(genesForTheNewChromosome.get(j), get(i).getAllele(genesForTheNewChromosome.get(j)));
+
+                int crossoverPoint = ThreadLocalRandom.current().nextInt(genesForCrossover.size());
+
+                // FIXED: Now correctly chooses between 0 and 1 (before, it was nextInt(1))
+                boolean beginningIsAnchor = ThreadLocalRandom.current().nextInt(2) == 0;
+
+                if (beginningIsAnchor) {
+                    for (int j = crossoverPoint; j < genesForCrossover.size(); j++) {
+                        Genes g = genesForCrossover.get(j);
+                        chromosomeA.updateAllele(g, get(i + 1).getAllele(g));
+                        chromosomeB.updateAllele(g, get(i).getAllele(g));
                     }
-                    crossedChromosomes.add(chromosomeA);
-                    crossedChromosomes.add(chromosomeB);
                 } else {
-                    // Genes from chromosome A and B are exchanged from the 
-                    // crossing point to the end of the chromosome.
                     for (int j = 0; j < crossoverPoint; j++) {
-                        chromosomeA.updateAllele(genesForTheNewChromosome.get(j), get(i + 1).getAllele(genesForTheNewChromosome.get(j)));
-                        chromosomeB.updateAllele(genesForTheNewChromosome.get(j), get(i).getAllele(genesForTheNewChromosome.get(j)));
+                        Genes g = genesForCrossover.get(j);
+                        chromosomeA.updateAllele(g, get(i + 1).getAllele(g));
+                        chromosomeB.updateAllele(g, get(i).getAllele(g));
                     }
-                    crossedChromosomes.add(chromosomeA);
-                    crossedChromosomes.add(chromosomeB);
                 }
+
+                crossedChromosomes.add(chromosomeA);
+                crossedChromosomes.add(chromosomeB);
             }
         }
+
         if (!crossedChromosomes.isEmpty()) {
             addAll(crossedChromosomes);
         }
     }
 
     /**
-     * This method computes the fitness for every chromosome in the population
-     * and also the average fitness of all them.
+     * Computes fitness for all chromosomes and sorts the population.
      */
     private void computeFitnessAndSort() {
+
         fitnessAverage = 0.0f;
-        for (Chromosome chromosome : toArray(new Chromosome[0])) {
+
+        for (Chromosome chromosome : this) {
             chromosome.computeFitness(initialStatus, strategicConstraints);
             fitnessAverage += chromosome.getFitness();
         }
+
         fitnessAverage /= size();
+
         sort(new ChromosomeComparator());
+
         if (!isEmpty()) {
             converged = get(BEST_CHROMOSOME_INDEX).getFitnessConstraintsCoverage() >= 1.0f;
         }
     }
 
     /**
-     * This method perform a soft reset of the algorithm by replacing the best
-     * fitted individual with random ones and recomputing the fitness
-     * accordingly.
+     * Performs a soft reset by removing the best half of the population.
      */
     public void softReset() {
+
         fitnessAverage = 0.0f;
         converged = false;
-        int oneThird = size() / 2;
-        for (int i = 0; i < oneThird; i++) {
+
+        int half = size() / 2;
+
+        for (int i = 0; i < half; i++) {
             if (!isEmpty()) {
                 remove(BEST_CHROMOSOME_INDEX);
             }
         }
+
         populateRandomly();
         reduceTo(this.initialNumberOfChromosomes);
         computeFitnessAndSort();
     }
 
-    /**
-     * This method returns whether the population contains a best individual
-     * with enough quality, or not.
-     *
-     * @return true, if the population contains a best individual with enough
-     * quality. Otherwise, false.
-     */
     public boolean hasConverged() {
         return converged;
     }
 
-    /**
-     * This method returns the average fitness of all chromosomes in the
-     * population.
-     *
-     * @return The average fitness of all chromosomes in the population.
-     */
     public float getFitnessAverage() {
         return fitnessAverage;
     }
 
     /**
-     * This method reduces the number of chromosomes in the population
-     * maintaining only the best ones especified as a parameter.
+     * Reduces the population to the specified number of best chromosomes.
      *
-     * @param finalNumber The number of best chromosomes that will survive to
-     * the pupulation reduction.
+     * @param finalNumber Number of highestfitness chromosomes to keep after
+     * reducing the population.
      */
     public final void reduceTo(int finalNumber) {
+
         computeFitnessAndSort();
-        CopyOnWriteArrayList<Chromosome> auxPopulation = new CopyOnWriteArrayList<>();
-        if (size() >= finalNumber) {
-            for (int i = 0; i < finalNumber; i++) {
-                auxPopulation.add(get(i));
-            }
+
+        if (size() > finalNumber) {
+            CopyOnWriteArrayList<Chromosome> aux
+                    = new CopyOnWriteArrayList<>(subList(0, finalNumber));
+
             clear();
-            addAll(auxPopulation);
+            addAll(aux);
         }
     }
 
     /**
-     * This method prints the population and the most important information
-     * related to it.
+     * Prints the population and its most relevant information.
      */
     public void print() {
         int i = 0;
         logger.info("Final population:");
-        for (Chromosome chromosome : toArray(new Chromosome[0])) {
+        for (Chromosome chromosome : this) {
             logger.info("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage());
             i++;
         }
