@@ -47,45 +47,65 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class is the superclass of all events generated in FLECO. It is an
- * abstract class that has to be implemented by every subclass.
+ * abstract class that must be extended by every specific event type.
+ *
+ * Each event stores: - A unique event identifier - The instant when the event
+ * was generated - The FLECO instance that produced it
+ *
+ * Events are comparable based on their timestamp and, if equal, by their ID.
+ * This ensures deterministic ordering even when multiple events occur at the
+ * same instant.
  *
  * @author Manuel Domínguez Dorado
  */
-@SuppressWarnings("serial")
 public abstract class FLECOEvent extends EventObject implements Comparable<FLECOEvent> {
 
     private long eventID;
-    private Instant instant;
+    private final Instant instant;
 
-    private final Logger logger = LoggerFactory.getLogger(FLECOEvent.class);
-    
+    private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(FLECOEvent.class);
+
     /**
-     * This is the constructor of the class that will be called by all
-     * subclasses to create a new event in FLECO.
+     * Constructor used by all subclasses to create a new FLECO event.
      *
-     * @param instant Every events includes the moment of their generation, in
-     * nanoseconds. It allow syncronizing everything that is happening during a
-     * simulation.
-     * @param source The object that generates the event.
+     * @param source The FLECO instance that generated the event.
      * @param eventID The unique event identifier.
+     * @param instant The instant when the event was generated.
      */
     public FLECOEvent(FLECO source, long eventID, Instant instant) {
         super(source);
+
+        if (source == null) {
+            logger.error("Null FLECO source provided to FLECOEvent.");
+            throw new IllegalArgumentException("source must not be null.");
+        }
+
+        if (instant == null) {
+            logger.error("Null Instant provided to FLECOEvent.");
+            throw new IllegalArgumentException("instant must not be null.");
+        }
+
+        if (eventID < 0) {
+            logger.error("Invalid eventID: {}", eventID);
+            throw new IllegalArgumentException("eventID must be non-negative.");
+        }
+
         this.eventID = eventID;
         this.instant = instant;
     }
 
     /**
-     * This method gets the instant in wich the event was generated.
+     * Returns the instant when the event was generated.
      *
-     * @return the instant in wich the event was generated.
+     * @return the instant when the event was generated.
      */
     public Instant getInstant() {
         return this.instant;
     }
 
     /**
-     * This method gets the event unique identifier.
+     * Returns the unique event identifier.
      *
      * @return the event unique identifier.
      */
@@ -94,45 +114,39 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     }
 
     /**
-     * This method sets the event unique identifier.
+     * Sets the event unique identifier.
      *
      * @param eventID the event unique identifier.
      */
     public void setEventID(long eventID) {
+        if (eventID < 0) {
+            logger.error("Attempted to set invalid eventID: {}", eventID);
+            throw new IllegalArgumentException("eventID must be non-negative.");
+        }
         this.eventID = eventID;
     }
 
     /**
-     * This method compares the current instance to another instance of
-     * FLECOEvent to know the ordinal position of one with respect the other.
+     * Compares this event with another event based on: 1. The instant of
+     * generation 2. The event ID (as a tie-breaker)
      *
-     * @param anotherEvent a FLECOEvent instance to be compared to the current
-     * one.
-     * @return -1, 0 or 1 depending on whether the current instance is lesser,
-     * equal or greater than the one specified as an argument.
+     * @param anotherEvent the event to compare with.
+     * @return -1, 0, or 1 depending on ordering.
      */
     @Override
     public int compareTo(FLECOEvent anotherEvent) {
-        if (instant.toEpochMilli() < anotherEvent.getInstant().toEpochMilli()) {
-            return -1;
-        } else if (instant.toEpochMilli() > anotherEvent.getInstant().toEpochMilli()) {
-            return 1;
-        } else {
-            if (getEventID() < anotherEvent.getEventID()) {
-                return -1;
-            } else if (getEventID() == anotherEvent.getEventID()) {
-                return 0;
-            }
-            return 1;
+        int timeComparison = this.instant.compareTo(anotherEvent.instant);
+        if (timeComparison != 0) {
+            return timeComparison;
         }
+        return Long.compare(this.eventID, anotherEvent.eventID);
     }
 
     /**
-     * This is an abstract method that should gets the event type of this event.
-     * It will be one of the enum defined in EventTypes.
+     * Returns the type of this event. It must be one of the values defined in
+     * {@link EventTypes}.
      *
-     * @return the event type of this event. It will be one of the enum defined
-     * in EventTypes.
+     * @return the event type.
      */
     public abstract EventTypes getType();
 }
