@@ -46,110 +46,128 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a progress event that will allow knowing the state of
- * the FLECO execution when it is running.
+ * Progress event generated during the execution of FLECO. It provides
+ * information about the current state of the evolutionary process, including
+ * elapsed time, generation count, best chromosome, and convergence status.
+ *
+ * Implementations of {@link IFLECOProgressEventListener} can use this event to
+ * monitor the evolution in real time.
+ *
+ * This class is immutable except for the inherited event ID.
  *
  * @author Manuel Domínguez-Dorado
  */
-@SuppressWarnings("serial")
 public class ProgressEvent extends FLECOEvent {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProgressEvent.class);
 
     private final long totalTime;
     private final long currentTime;
     private final long currentGeneration;
-    private Chromosome currentBestChromosome;
-    private boolean converged;
+    private final boolean converged;
 
-    private final Logger logger = LoggerFactory.getLogger(ProgressEvent.class);
-
-    private static final int ZERO = 0;
+    // Not serializable: events are not meant to be persisted
+    private transient final Chromosome currentBestChromosome;
 
     /**
-     * This method is the constrctor of the class.It creates a new instance of
-     * ProgressEvent.
+     * Creates a new progress event.
      *
-     * @param eventID The unique event identifier.
-     * @param eventGenerator The object that generates the event.
-     * @param totalTime the total amount of time allowed before finishing the
-     * FLECO execution, as milliseconds.
-     * @param currentTime the time that has elapsed from the begining of FLECO
-     * execution, as milliseconds.
-     * @param currentGeneration the current generation of the FLECO's
-     * pupolation.
-     * @param currentBestChromosome the current best individual in FLECO's
-     * population.
-     * @param converged Whether the FLECO has converged (true) or not (false).
+     * @param eventGenerator the FLECO instance that generated the event.
+     * @param eventID the unique event identifier.
+     * @param totalTime total allowed execution time in milliseconds.
+     * @param currentTime elapsed execution time in milliseconds.
+     * @param currentGeneration current generation number.
+     * @param currentBestChromosome best chromosome found so far.
+     * @param converged whether the population has converged.
      */
-    public ProgressEvent(FLECO eventGenerator, long eventID, long totalTime, long currentTime, long currentGeneration, Chromosome currentBestChromosome, boolean converged) {
+    public ProgressEvent(
+            FLECO eventGenerator,
+            long eventID,
+            long totalTime,
+            long currentTime,
+            long currentGeneration,
+            Chromosome currentBestChromosome,
+            boolean converged) {
+
         super(eventGenerator, eventID, Instant.now());
+
+        if (totalTime < 0 || currentTime < 0 || currentGeneration < 0) {
+            logger.error("Negative values are not allowed: totalTime={}, currentTime={}, currentGeneration={}",
+                    totalTime, currentTime, currentGeneration);
+            throw new IllegalArgumentException("Time and generation values must be non-negative.");
+        }
+
+        if (currentBestChromosome == null) {
+            logger.error("currentBestChromosome cannot be null.");
+            throw new IllegalArgumentException("currentBestChromosome cannot be null.");
+        }
+
         this.totalTime = totalTime;
         this.currentTime = currentTime;
         this.currentGeneration = currentGeneration;
         this.currentBestChromosome = currentBestChromosome;
         this.converged = converged;
-        if (currentBestChromosome == null) {
-            logger.error("currentBestChromosome cannot be null");
-            throw new IllegalArgumentException("currentBestChromosome cannot be null");
-        }
     }
 
     /**
-     * This method returns the progress percentage advertised by this event.
+     * Returns the progress percentage as a value between 0.0 and 1.0.
      *
-     * @return The progress percentage that the event is carrying out and will
-     * be received by the listener.
+     * @return the progress percentage of the FLECO execution.
      */
     public float getProgressPercentage() {
-        if (totalTime != ZERO) {
-            return (float) currentTime / (float) totalTime;
-        }
-        return 1.0f;
+        return (totalTime == 0) ? 1.0f : (float) currentTime / totalTime;
     }
 
     /**
-     * This method returns the current generation of FLECO's population.
+     * Returns the current generation number.
      *
-     * @return the current generation of FLECO's population.
+     * @return the current generation of the evolutionary process.
      */
     public long getCurrentGeneration() {
         return currentGeneration;
     }
 
     /**
-     * This method returns the current FLECO's population's best chromosome.
+     * Returns the best chromosome found so far.
      *
-     * @return the current FLECO's population's best chromosome.
+     * @return the current best chromosome in the population.
      */
     public Chromosome getCurrentBestChromosome() {
-        return this.currentBestChromosome;
+        return currentBestChromosome;
     }
 
     /**
-     * This method returns whether the FLECO's population has converged or not.
+     * Returns whether the population has converged.
      *
-     * @return true, if the FLECO's population has converged. Otherwise, returns
-     * false.
+     * @return true if the population has converged; false otherwise.
      */
     public boolean hasConverged() {
-        return this.converged;
+        return converged;
     }
 
     /**
-     * This method prints the information of the event if the current generation
-     * is a multiple of 100 (to avoid being too much verbose).
+     * Logs the event information every 100 generations to avoid excessive
+     * verbosity.
      */
     public void print() {
-        if ((currentGeneration % 100) == ZERO) {
-            logger.info("Time: " + currentTime + "/" + totalTime + "(" + (float) currentTime / totalTime + "%) Generation: " + currentGeneration + " Current best solution: " + currentBestChromosome.getFitness());
+        if (currentGeneration % 100 == 0) {
+            logger.info(
+                    "Time: {}/{} ({}%) | Generation: {} | Best fitness: {}",
+                    currentTime,
+                    totalTime,
+                    getProgressPercentage() * 100.0f,
+                    currentGeneration,
+                    currentBestChromosome.getFitness()
+            );
         }
     }
 
     /**
-     * This method return the type of this event. It is one of the enums defined
-     * in EventTypes.
+     * Returns the type of this event.
      *
-     * @return The type of this event. It is one of the enums defined in
-     * EventTypes.
+     * @return the event type, always {@link EventTypes#PROGRESS}.
      */
     @Override
     public EventTypes getType() {
