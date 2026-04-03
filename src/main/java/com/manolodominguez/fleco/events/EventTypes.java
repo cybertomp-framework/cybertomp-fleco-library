@@ -39,17 +39,16 @@
  */
 package com.manolodominguez.fleco.events;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * This enum define the different events that FLECO can generate.
+ * Defines the different types of events that FLECO can generate. Currently,
+ * only progress events are supported, but this enumeration allows future
+ * extension (e.g., warnings, errors, checkpoints).
+ *
+ * This enum is intentionally lightweight and contains no internal state or
+ * behavior.
  *
  * @author Manuel Domínguez-Dorado
  */
 public enum EventTypes {
     PROGRESS;
-    
-    private final Logger logger = LoggerFactory.getLogger(EventTypes.class);
-    
 }
