@@ -51,13 +51,11 @@ package com.manolodominguez.fleco.genetics;
  * None of the lookup methods return {@code null}. Instead, they return the
  * closest boundary value when no exact match is found:
  *
- * {@code getGreater(value)} → returns {@code DLI_100} if none is greater
- * {@code getGreaterOrEqual(value)} → returns {@code DLI_100} if none is ≥
- * {@code getEqual(value)} → returns {@code DLI_0} if no exact match
- * {@code getLesserOrEqual(value)} → returns {@code DLI_0} if none is ≤
- * {@code getLesser(value)} → returns {@code DLI_0} if none is <
- *
- * This preserves the behavior of the original implementation.
+ * {@code getGreater(value)} → returns {@code DLI_100} if none is greater  
+ * {@code getGreaterOrEqual(value)} → returns {@code DLI_100} if none is greater or equal  
+ * {@code getEqual(value)} → returns {@code DLI_0} if no exact match  
+ * {@code getLesserOrEqual(value)} → returns {@code DLI_0} if none is less or equal  
+ * {@code getLesser(value)} → returns {@code DLI_0} if none is less than the given value
  *
  * @author Manuel Domínguez-Dorado
  */
@@ -104,8 +102,8 @@ public enum Alleles {
      * returned.
      *
      * @param value the reference value.
-     * @return the first allele with DLI > value, or {@code DLI_100} if none
-     * exists.
+     * @return the first allele with DLI greater than the given value,
+     *         or {@code DLI_100} if none exists.
      */
     public static Alleles getGreater(float value) {
         for (Alleles allele : values()) {
@@ -122,8 +120,8 @@ public enum Alleles {
      * returned.
      *
      * @param value the reference value.
-     * @return the first allele with DLI ≥ value, or {@code DLI_100} if none
-     * exists.
+     * @return the first allele with DLI greater than or equal to the given value,
+     *         or {@code DLI_100} if none exists.
      */
     public static Alleles getGreaterOrEqual(float value) {
         for (Alleles allele : values()) {
@@ -139,7 +137,8 @@ public enum Alleles {
      * allele matches exactly, {@link #DLI_0} is returned.
      *
      * @param value the reference value.
-     * @return the allele with DLI == value, or {@code DLI_0} if none exists.
+     * @return the allele with DLI equal to the given value,
+     *         or {@code DLI_0} if none exists.
      */
     public static Alleles getEqual(float value) {
         for (Alleles allele : values()) {
@@ -155,8 +154,8 @@ public enum Alleles {
      * value. If no allele satisfies the condition, {@link #DLI_0} is returned.
      *
      * @param value the reference value.
-     * @return the first allele with DLI ≤ value, or {@code DLI_0} if none
-     * exists.
+     * @return the first allele with DLI less than or equal to the given value,
+     *         or {@code DLI_0} if none exists.
      */
     public static Alleles getLesserOrEqual(float value) {
         for (Alleles allele : values()) {
@@ -172,8 +171,8 @@ public enum Alleles {
      * If no allele satisfies the condition, {@link #DLI_0} is returned.
      *
      * @param value the reference value.
-     * @return the first allele with DLI < value, or {@code DLI_0} if none
-     * exists.
+     * @return the first allele with DLI less than the given value,
+     *         or {@code DLI_0} if none exists.
      */
     public static Alleles getLesser(float value) {
         for (Alleles allele : values()) {
