@@ -43,46 +43,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a ID generator that generates consecutive numeric IDs,
- * in a cycle that never ends.
+ * Generates consecutive numeric identifiers in a cyclic manner. When the
+ * maximum integer value is reached, the sequence restarts from zero.
+ *
+ * This class is thread-safe.
  *
  * @author Manuel Domínguez Dorado
  */
-@SuppressWarnings("serial")
 public class RotaryIDGenerator {
+
+    private static final Logger logger = LoggerFactory.getLogger(RotaryIDGenerator.class);
 
     private static final int DEFAULT_ID = 0;
 
-    private int identifier;
+    /** Internal counter for ID generation. */
+    private int identifier = DEFAULT_ID;
 
-    private final Logger logger = LoggerFactory.getLogger(RotaryIDGenerator.class);
-    
     /**
-     * This method is the constructor of the class. It is create a new instance.
+     * Creates a new ID generator initialized at zero.
      */
     public RotaryIDGenerator() {
-        identifier = DEFAULT_ID;
+        // No additional initialization required
     }
 
     /**
-     * This method resets the ID generator to its initial internal value.
+     * Resets the ID generator to its initial value.
      */
     public synchronized void reset() {
         identifier = DEFAULT_ID;
     }
 
     /**
-     * This method generates a new ID.
+     * Returns the next identifier in the sequence. When the maximum integer
+     * value is reached, the sequence wraps around to zero.
      *
-     * @return the next identifier, as an integer value.
+     * @return the next generated identifier.
      */
-    synchronized public int getNextIdentifier() {
-        if (identifier >= Integer.MAX_VALUE) {
+    public synchronized int getNextIdentifier() {
+        if (identifier == Integer.MAX_VALUE) {
+            logger.debug("Identifier reached MAX_VALUE. Wrapping to zero.");
             identifier = DEFAULT_ID;
         } else {
             identifier++;
         }
-        return (identifier);
+        return identifier;
     }
-
 }
