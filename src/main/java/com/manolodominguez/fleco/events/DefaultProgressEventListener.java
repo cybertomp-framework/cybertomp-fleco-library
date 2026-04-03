@@ -43,21 +43,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a progress event listener that will receive progress
- * event from a FLECO instance.
+ * Default implementation of a FLECO progress event listener. This listener
+ * simply prints the information contained in each received
+ * {@link ProgressEvent}. It is intended mainly for debugging or console-based
+ * monitoring.
+ *
+ * Applications may implement their own listener to integrate FLECO progress
+ * into GUIs, dashboards, logs, or monitoring systems.
  *
  * @author Manuel Domínguez-Dorado
  */
 public class DefaultProgressEventListener implements IFLECOProgressEventListener {
 
-    private final Logger logger = LoggerFactory.getLogger(DefaultProgressEventListener.class);
-    
+    private static final Logger logger = LoggerFactory.getLogger(DefaultProgressEventListener.class);
+
     /**
-     * This methods receive a progress event from a FLECO instance and print the
-     * information contained on it.
+     * Receives a progress event from a FLECO instance and prints its content.
+     *
+     * @param progressEvent the event containing the current evolution status.
      */
     @Override
     public void onProgressEventReceived(ProgressEvent progressEvent) {
+
+        // Defensive check: avoids NullPointerException if someone misuses the API.
+        if (progressEvent == null) {
+            logger.warn("Received a null ProgressEvent. Ignoring.");
+            return;
+        }
+
+        // Delegates printing to the event itself.
         progressEvent.print();
     }
 
