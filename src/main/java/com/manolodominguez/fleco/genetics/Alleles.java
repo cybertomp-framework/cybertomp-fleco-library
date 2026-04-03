@@ -39,138 +39,148 @@
  */
 package com.manolodominguez.fleco.genetics;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * This enum define the Discrete Levels of Implementation of each expected
- * outcomes as defined in CyberTOMP proposal.
+ * Represents the discrete levels of implementation (DLI) defined in the
+ * CyberTOMP proposal. Each allele corresponds to a numeric value between 0.0
+ * and 1.0.
+ *
+ * The enumeration is ordered from lowest to highest DLI. This ordering is
+ * validated at class-loading time to ensure correctness of threshold-based
+ * queries.
+ *
+ * None of the lookup methods return {@code null}. Instead, they return the
+ * closest boundary value when no exact match is found:
+ *
+ * {@code getGreater(value)} → returns {@code DLI_100} if none is greater
+ * {@code getGreaterOrEqual(value)} → returns {@code DLI_100} if none is ≥
+ * {@code getEqual(value)} → returns {@code DLI_0} if no exact match
+ * {@code getLesserOrEqual(value)} → returns {@code DLI_0} if none is ≤
+ * {@code getLesser(value)} → returns {@code DLI_0} if none is <
+ *
+ * This preserves the behavior of the original implementation.
  *
  * @author Manuel Domínguez-Dorado
  */
 public enum Alleles {
+
     DLI_0(0.0f),
     DLI_33(0.33f),
     DLI_67(0.67f),
     DLI_100(1.0f);
 
-    private final float DLI;
+    private final float dli;
 
-    private static final Logger logger = LoggerFactory.getLogger(Alleles.class);
-    
-    /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding value.
-     *
-     * @param DLI Afloat value representing the discrete level of
-     * implementation. A number between 0.0 and 1.0.
-     */
-    private Alleles(float DLI) {
-        this.DLI = DLI;
+    Alleles(float dli) {
+        this.dli = dli;
     }
 
     /**
-     * This method return the numeric value of the discrete level of
-     * implementation.
+     * Ensures that the enum values are declared in ascending order of DLI. This
+     * validation runs once when the class is loaded.
+     */
+    static {
+        Alleles[] values = Alleles.values();
+        for (int i = 1; i < values.length; i++) {
+            if (values[i].dli < values[i - 1].dli) {
+                throw new IllegalStateException(
+                        "Alleles enum values must be declared in ascending DLI order."
+                );
+            }
+        }
+    }
+
+    /**
+     * Returns the numeric value of this discrete level of implementation.
      *
-     * @return The numeric value of the discrete level of implementation.
+     * @return the DLI value as a float between 0.0 and 1.0.
      */
     public float getDLI() {
-        return this.DLI;
+        return dli;
     }
 
     /**
-     * This method returns the first DLI that is greater than the value
-     * specified as a parameter.
+     * Returns the first allele whose DLI is strictly greater than the given
+     * value. If no allele satisfies the condition, {@link #DLI_100} is
+     * returned.
      *
-     * @param value The reference value.
-     * @return the first DLI that is greater than the value specified as a
-     * parameter, if exists. Otherwise, null.
+     * @param value the reference value.
+     * @return the first allele with DLI > value, or {@code DLI_100} if none
+     * exists.
      */
-    public static Alleles getGreater(Float value) {
-        Alleles result = Alleles.DLI_100;
-        for (Alleles allele : Alleles.values()) {
-            if (allele.getDLI() > value) {
-                result = allele;
-                break;
+    public static Alleles getGreater(float value) {
+        for (Alleles allele : values()) {
+            if (allele.dli > value) {
+                return allele;
             }
         }
-        return result;
+        return DLI_100;
     }
 
     /**
-     * This method returns the first DLI that is greater or equal than the value
-     * specified as a parameter.
+     * Returns the first allele whose DLI is greater than or equal to the given
+     * value. If no allele satisfies the condition, {@link #DLI_100} is
+     * returned.
      *
-     * @param value The reference value.
-     * @return the first DLI that is greater or equal than the value specified
-     * as a parameter, if exists. Otherwise, null.
+     * @param value the reference value.
+     * @return the first allele with DLI ≥ value, or {@code DLI_100} if none
+     * exists.
      */
-    public static Alleles getGreaterOrEqual(Float value) {
-        Alleles result = Alleles.DLI_100;
-        for (Alleles allele : Alleles.values()) {
-            if (allele.getDLI() >= value) {
-                result = allele;
-                break;
+    public static Alleles getGreaterOrEqual(float value) {
+        for (Alleles allele : values()) {
+            if (allele.dli >= value) {
+                return allele;
             }
         }
-        return result;
+        return DLI_100;
     }
 
     /**
-     * This method returns the DLI that is equal than the value specified as a
-     * parameter.
+     * Returns the allele whose DLI is exactly equal to the given value. If no
+     * allele matches exactly, {@link #DLI_0} is returned.
      *
-     * @param value The reference value.
-     * @return the first DLI equal than the value specified as a parameter, if
-     * exists. Otherwise, null.
+     * @param value the reference value.
+     * @return the allele with DLI == value, or {@code DLI_0} if none exists.
      */
-    public static Alleles getEqual(Float value) {
-        Alleles result = Alleles.DLI_0;
-        for (Alleles allele : Alleles.values()) {
-            if (allele.getDLI() == value) {
-                result = allele;
-                break;
+    public static Alleles getEqual(float value) {
+        for (Alleles allele : values()) {
+            if (allele.dli == value) {
+                return allele;
             }
         }
-        return result;
+        return DLI_0;
     }
 
     /**
-     * This method returns the first DLI that is lesser or equal than the value
-     * specified as a parameter.
+     * Returns the first allele whose DLI is less than or equal to the given
+     * value. If no allele satisfies the condition, {@link #DLI_0} is returned.
      *
-     * @param value The reference value.
-     * @return the first DLI that is lesser or equal than the value specified as
-     * a parameter, if exists. Otherwise, null.
+     * @param value the reference value.
+     * @return the first allele with DLI ≤ value, or {@code DLI_0} if none
+     * exists.
      */
-    public static Alleles getLesserOrEqual(Float value) {
-        Alleles result = Alleles.DLI_0;
-        for (Alleles allele : Alleles.values()) {
-            if (allele.getDLI() <= value) {
-                result = allele;
-                break;
+    public static Alleles getLesserOrEqual(float value) {
+        for (Alleles allele : values()) {
+            if (allele.dli <= value) {
+                return allele;
             }
         }
-        return result;
+        return DLI_0;
     }
 
     /**
-     * This method returns the first DLI that is lesser than the value specified
-     * as a parameter.
+     * Returns the first allele whose DLI is strictly less than the given value.
+     * If no allele satisfies the condition, {@link #DLI_0} is returned.
      *
-     * @param value The reference value.
-     * @return the first DLI that is lesser than the value specified as a
-     * parameter, if exists. Otherwise, null.
+     * @param value the reference value.
+     * @return the first allele with DLI < value, or {@code DLI_0} if none
+     * exists.
      */
-    public static Alleles getLesser(Float value) {
-        Alleles result = Alleles.DLI_0;
-        for (Alleles allele : Alleles.values()) {
-            if (allele.getDLI() < value) {
-                result = allele;
-                break;
+    public static Alleles getLesser(float value) {
+        for (Alleles allele : values()) {
+            if (allele.dli < value) {
+                return allele;
             }
         }
-        return result;
+        return DLI_0;
     }
 }
