@@ -61,11 +61,18 @@ package com.manolodominguez.fleco.genetics;
  */
 public enum Alleles {
 
+    /** Represents a discrete implementation level of 0%. */
     DLI_0(0.0f),
-    DLI_33(0.33f),
-    DLI_67(0.67f),
-    DLI_100(1.0f);
 
+    /** Represents a discrete implementation level of 33%. */
+    DLI_33(0.33f),
+
+    /** Represents a discrete implementation level of 67%. */
+    DLI_67(0.67f),
+
+    /** Represents a discrete implementation level of 100%. */
+    DLI_100(1.0f);
+    
     private final float dli;
 
     Alleles(float dli) {
