@@ -57,8 +57,6 @@ import org.slf4j.LoggerFactory;
  * optimization objective 1, and the implementation group that determines which
  * genes, categories and functions apply.
  *
- * All public behavior is preserved exactly as in the original implementation.
- *
  * @author Manuel Domínguez-Dorado
  */
 public class Chromosome {
@@ -281,8 +279,7 @@ public class Chromosome {
     }
 
     /**
-     * Prints in console a beautified version of the chromosome. Output format
-     * is preserved exactly as in the original implementation.
+     * Prints in console a beautified version of the chromosome.
      */
     public void print() {
         ChromosomeMetrics m = computeMetrics();
@@ -330,8 +327,7 @@ public class Chromosome {
 
     /**
      * Prints in console a plain version of the chromosome showing the value of
-     * every gene. Output format is preserved exactly as in the original
-     * implementation.
+     * every gene.
      */
     public void printGenes() {
         ChromosomeMetrics m = computeMetrics();
@@ -440,8 +436,6 @@ public class Chromosome {
      * (gene/category/function/asset). 3. Assigns a score of 1.0 if fully
      * satisfied, or a linear partial score otherwise. 4. Returns the normalized
      * ratio of satisfied constraints.
-     *
-     * Behavior is preserved exactly as in the original implementation.
      *
      * @param strategicConstraints The set of strategic constraints to evaluate.
      * @return A normalized fitness value between 0.0 and 1.0.
