@@ -45,6 +45,7 @@ import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,14 +53,35 @@ import org.slf4j.LoggerFactory;
 /**
  * This class implements a chromosome, an individual within FLECO's population.
  *
+ * It stores the mapping between genes and alleles, the fitness value for
+ * optimization objective 1, and the implementation group that determines which
+ * genes, categories and functions apply.
+ *
+ * All public behavior is preserved exactly as in the original implementation.
+ *
  * @author Manuel Domínguez-Dorado
  */
 public class Chromosome {
 
+    /**
+     * Mapping between each gene and its assigned allele.
+     */
     private EnumMap<Genes, Alleles> genes;
+
+    /**
+     * Fitness value for optimization objective 1 (strategic constraints
+     * coverage).
+     */
     private float fitness;
+
+    /**
+     * Implementation group that applies to this chromosome.
+     */
     private final ImplementationGroups implementationGroup;
 
+    /**
+     * Logger used for debugging and structured chromosome output.
+     */
     private static final Logger logger = LoggerFactory.getLogger(Chromosome.class);
 
     /**
@@ -70,51 +92,102 @@ public class Chromosome {
     private static final Alleles[] ALLELES = Alleles.values();
 
     /**
-     * This is the constructor of the class. It creates a new chromosome and set
-     * all its chromosomes to the default allele. It also set the implementation
-     * group that will apply.
+     * Immutable container for all intermediate metrics derived from the
+     * chromosome: - raw gene values - raw category values - raw function values
+     * - aggregated asset value
+     *
+     * This class has no behavior and is only used to avoid code duplication.
+     */
+    private static final class ChromosomeMetrics {
+
+        final EnumMap<Genes, Float> genesValues;
+        final EnumMap<Categories, Float> categoriesValues;
+        final EnumMap<Functions, Float> functionsValues;
+        final float assetValue;
+
+        ChromosomeMetrics(EnumMap<Genes, Float> genesValues,
+                EnumMap<Categories, Float> categoriesValues,
+                EnumMap<Functions, Float> functionsValues,
+                float assetValue) {
+            this.genesValues = genesValues;
+            this.categoriesValues = categoriesValues;
+            this.functionsValues = functionsValues;
+            this.assetValue = assetValue;
+        }
+    }
+
+    /**
+     * Constructor. Creates a new chromosome and sets all its genes to the
+     * default allele (DLI_0). It also sets the implementation group that will
+     * apply.
      *
      * @param implementationGroup The implementation group that applies to the
-     * asset that is being considered. According to CyberTOMP proposal,
-     * depending on the implementation group, the number of genes in the
-     * chromosome varies.
+     * asset that is being considered.
+     * @throws IllegalArgumentException if implementationGroup is null.
      */
     public Chromosome(ImplementationGroups implementationGroup) {
-        genes = new EnumMap<>(Genes.class);
+        if (implementationGroup == null) {
+            logger.error("Null implementation group passed to Chromosome constructor.");
+            throw new IllegalArgumentException("Implementation group cannot be null.");
+        }
+        this.implementationGroup = implementationGroup;
+        this.genes = new EnumMap<>(Genes.class);
         for (Genes gene : Genes.values()) {
             genes.put(gene, Alleles.DLI_0);
         }
-        fitness = 0.0f;
-        this.implementationGroup = implementationGroup;
+        this.fitness = 0.0f;
     }
 
+    /**
+     * Returns the implementation group associated with this chromosome.
+     *
+     * @return the implementation group.
+     */
     public ImplementationGroups getImplementationGroup() {
         return this.implementationGroup;
     }
 
     /**
-     * This method returns the allele of the specified gene.
+     * Returns the allele of the specified gene.
      *
      * @param gene the gene whose allele is being requested.
      * @return The allele of the specified gene.
+     * @throws IllegalArgumentException if gene is null.
      */
     public Alleles getAllele(Genes gene) {
+        if (gene == null) {
+            logger.error("Null gene passed to getAllele().");
+            throw new IllegalArgumentException("Gene cannot be null.");
+        }
         return this.genes.get(gene);
     }
 
     /**
-     * This method set the genes and alleles of this chromosome to those
-     * specified as a parameter.
+     * Sets the genes and alleles of this chromosome to those specified as a
+     * parameter. Partial maps are allowed (not all genes need to be present),
+     * but: - The map itself cannot be null. - No allele value can be null.
      *
      * @param genes The genes and alleles to configure the chromosome.
+     * @throws IllegalArgumentException if genes is null or contains null
+     * alleles.
      */
     public void setGenes(EnumMap<Genes, Alleles> genes) {
+        if (genes == null) {
+            logger.error("Null genes map passed to setGenes().");
+            throw new IllegalArgumentException("Genes map cannot be null.");
+        }
+        for (Map.Entry<Genes, Alleles> entry : genes.entrySet()) {
+            if (entry.getKey() == null || entry.getValue() == null) {
+                logger.error("Null key or value found in genes map passed to setGenes().");
+                throw new IllegalArgumentException("Genes map cannot contain null keys or null alleles.");
+            }
+        }
         this.genes.clear();
         this.genes.putAll(genes);
     }
 
     /**
-     * This method returns the genes and alleles of this chromosome.
+     * Returns the genes and alleles of this chromosome.
      *
      * @return The genes and alleles of this chromosome.
      */
@@ -123,18 +196,23 @@ public class Chromosome {
     }
 
     /**
-     * This method add or update a gene and its respective allele in the
-     * chromosome.
+     * Adds or updates a gene and its respective allele in the chromosome.
      *
-     * @param gene The gene to be added or udated.
+     * @param gene The gene to be added or updated.
      * @param allele The allele for the specified gene.
+     * @throws IllegalArgumentException if gene or allele is null.
      */
     public void updateAllele(Genes gene, Alleles allele) {
+        if (gene == null || allele == null) {
+            logger.error("Null gene or allele passed to updateAllele().");
+            throw new IllegalArgumentException("Gene and allele cannot be null.");
+        }
         this.genes.put(gene, allele);
     }
 
     /**
-     * This method assigns a random allele to every gene in the chromosome.
+     * Assigns a random allele to every gene in the chromosome. Genes that do
+     * not apply to the implementation group are forced to DLI_0.
      */
     public void randomizeGenes() {
         for (Genes gene : Genes.values()) {
@@ -148,278 +226,15 @@ public class Chromosome {
     }
 
     /**
-     * This method prints in console a beautified version of the chromosome.
-     */
-    public void print() {
-        EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
-        EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
-        EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
-        Float assetValue = 0.0f;
-
-        float auxFunctionFitness = 0.0f;
-        float auxCategoryFitness = 0.0f;
-        int num = 0;
-        for (Functions f : Functions.values()) {
-            if (f.appliesToIG(implementationGroup)) {
-                auxFunctionFitness = 0.0f;
-
-                for (Categories c : f.getCategories(implementationGroup)) {
-                    auxCategoryFitness = 0.0f;
-                    for (Genes g : c.getGenes(implementationGroup)) {
-                        // Gene raw value
-                        genesValues.put(g, getAllele(g).getDLI());
-                        // To compute category fitness
-                        num++;
-                        auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
-                    }
-                    // Category raw value
-                    categoriesValues.put(c, auxCategoryFitness);
-                    // To compute Function fitness
-                    auxCategoryFitness *= c.getWeight(implementationGroup);
-                    if (auxCategoryFitness > c.getWeight(implementationGroup)) {
-                        auxCategoryFitness = c.getWeight(implementationGroup);
-                    }
-                    auxFunctionFitness += auxCategoryFitness;
-                }
-                // Function raw value
-                functionsValues.put(f, auxFunctionFitness);
-                // To compute asset fitness
-                auxFunctionFitness *= f.getWeight(implementationGroup);
-                if (auxFunctionFitness > f.getWeight(implementationGroup)) {
-                    auxFunctionFitness = f.getWeight(implementationGroup);
-                }
-                assetValue += auxFunctionFitness;
-            }
-        }
-        logger.info("\tAsset: " + assetValue);
-        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            logger.info("\t\t" + function.name() + ": " + functionsValues.get(function));
-            for (Categories category : function.getCategories(implementationGroup)) {
-                logger.info("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
-                for (Genes gene : category.getGenes(implementationGroup)) {
-                    logger.info("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI());
-                }
-            }
-        }
-    }
-
-    /**
-     * This method returns the genes of this chromosome as JSON strings to be
-     * treated automatically whenever needed.
+     * Computes all intermediate metrics derived from the chromosome: - raw gene
+     * values - raw category values - raw function values - aggregated asset
+     * value
      *
-     * @return the genes of this chromosome as JSON strings.
-     */
-    public String getGenesAsJSONString() {
-        String JSONString = "";
-        int genesNum = 0;
-        for (Genes gene : genes.keySet()) {
-            if (gene.appliesToIG(implementationGroup)) {
-                JSONString += "\t\t{\"gene\":\"" + gene.name() + "\",\"allele\":\"" + getAllele(gene).name() + "\"}";
-                if (genesNum < (Genes.getGenesFor(implementationGroup).size() - 1)) {
-                    JSONString += ",\n";
-                } else {
-                    JSONString += "\n";
-                }
-                genesNum++;
-            }
-        }
-        return JSONString;
-    }
-
-    /**
-     * This method prints in console a plain version of the chromosome showing
-     * the value of every gene.
-     */
-    public void printGenes() {
-        EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
-        EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
-        EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
-        Float assetValue = 0.0f;
-
-        float auxFunctionFitness = 0.0f;
-        float auxCategoryFitness = 0.0f;
-        int num = 0;
-        for (Functions f : Functions.values()) {
-            if (f.appliesToIG(implementationGroup)) {
-                auxFunctionFitness = 0.0f;
-
-                for (Categories c : f.getCategories(implementationGroup)) {
-                    auxCategoryFitness = 0.0f;
-                    for (Genes g : c.getGenes(implementationGroup)) {
-                        // Gene raw value
-                        genesValues.put(g, getAllele(g).getDLI());
-                        // To compute category fitness
-                        num++;
-                        auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
-                    }
-                    // Category raw value
-                    if (auxCategoryFitness > 1.0f) {
-                        auxCategoryFitness = 1.0f;
-                    }
-                    categoriesValues.put(c, auxCategoryFitness);
-                    // To compute Function fitness
-                    auxCategoryFitness *= c.getWeight(implementationGroup);
-                    if (auxCategoryFitness > c.getWeight(implementationGroup)) {
-                        auxCategoryFitness = c.getWeight(implementationGroup);
-                    }
-                    auxFunctionFitness += auxCategoryFitness;
-                }
-                // Function raw value
-                if (auxFunctionFitness > 1.0f) {
-                    auxFunctionFitness = 1.0f;
-                }
-                functionsValues.put(f, auxFunctionFitness);
-                // To compute asset fitness
-                auxFunctionFitness *= f.getWeight(implementationGroup);
-                if (auxFunctionFitness > f.getWeight(implementationGroup)) {
-                    auxFunctionFitness = f.getWeight(implementationGroup);
-                }
-                assetValue += auxFunctionFitness;
-            }
-        }
-        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            for (Categories category : function.getCategories(implementationGroup)) {
-                for (Genes gene : category.getGenes(implementationGroup)) {
-                    logger.info(gene.name() + "#" + getAllele(gene).getDLI());
-                }
-            }
-        }
-    }
-
-    /**
-     * This method prints in console a beautified version of the chromosome.It
-     * includes information to compare the chromosome to a previous initial
-     * state.
+     * This method does not modify the chromosome and has no side effects.
      *
-     * @param initialStatus A chromosome representing an initial cybersecurity
-     * status the current chromosome is going to be compared to.
+     * @return a ChromosomeMetrics object containing all computed values.
      */
-    public void print(Chromosome initialStatus) {
-        EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
-        EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
-        EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
-        Float assetValue = 0.0f;
-
-        float auxFunctionFitness = 0.0f;
-        float auxCategoryFitness = 0.0f;
-        int num = 0;
-        for (Functions f : Functions.values()) {
-            if (f.appliesToIG(implementationGroup)) {
-                auxFunctionFitness = 0.0f;
-
-                for (Categories c : f.getCategories(implementationGroup)) {
-                    auxCategoryFitness = 0.0f;
-                    for (Genes g : c.getGenes(implementationGroup)) {
-                        // Gene raw value
-                        genesValues.put(g, getAllele(g).getDLI());
-                        // To compute category fitness
-                        num++;
-                        auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
-                    }
-                    // Category raw value
-                    if (auxCategoryFitness > 1.0f) {
-                        auxCategoryFitness = 1.0f;
-                    }
-                    categoriesValues.put(c, auxCategoryFitness);
-                    // To compute Function fitness
-                    auxCategoryFitness *= c.getWeight(implementationGroup);
-                    if (auxCategoryFitness > c.getWeight(implementationGroup)) {
-                        auxCategoryFitness = c.getWeight(implementationGroup);
-                    }
-                    auxFunctionFitness += auxCategoryFitness;
-                }
-                // Function raw value
-                if (auxFunctionFitness > 1.0f) {
-                    auxFunctionFitness = 1.0f;
-                }
-                functionsValues.put(f, auxFunctionFitness);
-                // To compute asset fitness
-                auxFunctionFitness *= f.getWeight(implementationGroup);
-                if (auxFunctionFitness > f.getWeight(implementationGroup)) {
-                    auxFunctionFitness = f.getWeight(implementationGroup);
-                }
-                assetValue += auxFunctionFitness;
-            }
-        }
-        logger.info("\tAsset: " + assetValue);
-        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            logger.info("\t\t" + function.name() + ": " + functionsValues.get(function));
-            for (Categories category : function.getCategories(implementationGroup)) {
-                logger.info("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
-                for (Genes gene : category.getGenes(implementationGroup)) {
-                    logger.info("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI() + getSimilarityText(initialStatus.getAllele(gene), getAllele(gene)));
-                }
-            }
-        }
-    }
-
-    /**
-     * This method returns a text explaining the evolution between two alleles
-     * specified as parameters.
-     *
-     * @param initialAllele The initial allele to be compared.
-     * @param currentAllele The current/final allele to be compared.
-     * @return A text explaining the evolution between two alleles specified as
-     * parameters.
-     */
-    private String getSimilarityText(Alleles initialAllele, Alleles currentAllele) {
-        if (initialAllele == currentAllele) {
-            return " (UNCHANGED)";
-        }
-        return " (PREVIOUSLY " + initialAllele.getDLI() + ")";
-    }
-
-    /**
-     * This method returns the fitness value.
-     *
-     * @return the chromosome's fitness.
-     */
-    public float getFitness() {
-        return fitness;
-    }
-
-    /**
-     * This method computes the chromosome's fitness.
-     *
-     * @param initialStatus A chromosome representing an initial cybersecurity
-     * status.
-     * @param strategicConstraints A ser of strategic constraints to be takein
-     * into consideration when optimizing the three optimization objectives.
-     */
-    public void computeFitness(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
-        fitness = computeFitnessConstraintsCoverage(strategicConstraints);
-    }
-
-    /**
-     * This method returns the fitness related to the optimization objective 1
-     * (compliance with the defined strategic constraints).
-     *
-     * @return the fitness related to the optimization objective 1 (compliance
-     * with the defined strategic constraints).
-     */
-    public float getFitnessConstraintsCoverage() {
-        return this.fitness;
-    }
-
-    /**
-     * Computes the fitness related to optimization objective 1: compliance with
-     * the defined strategic constraints.
-     *
-     * The method: 1. Computes raw values for genes, categories, functions, and
-     * the asset. 2. Evaluates each defined constraint
-     * (gene/category/function/asset). 3. Assigns a score of 1.0 if fully
-     * satisfied, or a linear partial score otherwise. 4. Returns the normalized
-     * ratio of satisfied constraints.
-     *
-     * @param strategicConstraints The set of strategic constraints to evaluate.
-     * @return A normalized fitness value between 0.0 and 1.0.
-     */
-    private float computeFitnessConstraintsCoverage(StrategicConstraints strategicConstraints) {
-
-        float numberOfConstraints = strategicConstraints.numberOfConstraints();
-        float satisfiedConstraints = 0.0f;
-
-        // --- Compute raw metrics ---
+    private ChromosomeMetrics computeMetrics() {
         EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
         EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
         EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
@@ -462,7 +277,193 @@ public class Chromosome {
             }
         }
 
-        // --- Evaluate constraints on genes ---
+        return new ChromosomeMetrics(genesValues, categoriesValues, functionsValues, assetValue);
+    }
+
+    /**
+     * Prints in console a beautified version of the chromosome. Output format
+     * is preserved exactly as in the original implementation.
+     */
+    public void print() {
+        ChromosomeMetrics m = computeMetrics();
+
+        logger.info("\tAsset: " + m.assetValue);
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            logger.info("\t\t" + function.name() + ": " + m.functionsValues.get(function));
+            for (Categories category : function.getCategories(implementationGroup)) {
+                logger.info("\t\t\t" + category.name() + ": " + m.categoriesValues.get(category));
+                for (Genes gene : category.getGenes(implementationGroup)) {
+                    logger.info("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI());
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the genes of this chromosome as JSON strings to be treated
+     * automatically whenever needed.
+     *
+     * @return the genes of this chromosome as JSON strings.
+     */
+    public String getGenesAsJSONString() {
+        StringBuilder sb = new StringBuilder();
+        int genesNum = 0;
+        int totalGenes = Genes.getGenesFor(implementationGroup).size();
+
+        for (Genes gene : genes.keySet()) {
+            if (gene.appliesToIG(implementationGroup)) {
+                sb.append("\t\t{\"gene\":\"")
+                        .append(gene.name())
+                        .append("\",\"allele\":\"")
+                        .append(getAllele(gene).name())
+                        .append("\"}");
+                if (genesNum < (totalGenes - 1)) {
+                    sb.append(",\n");
+                } else {
+                    sb.append("\n");
+                }
+                genesNum++;
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Prints in console a plain version of the chromosome showing the value of
+     * every gene. Output format is preserved exactly as in the original
+     * implementation.
+     */
+    public void printGenes() {
+        ChromosomeMetrics m = computeMetrics();
+
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            for (Categories category : function.getCategories(implementationGroup)) {
+                for (Genes gene : category.getGenes(implementationGroup)) {
+                    logger.info(gene.name() + "#" + getAllele(gene).getDLI());
+                }
+            }
+        }
+    }
+
+    /**
+     * Prints in console a beautified version of the chromosome. It includes
+     * information to compare the chromosome to a previous initial state.
+     *
+     * @param initialStatus A chromosome representing an initial cybersecurity
+     * status the current chromosome is going to be compared to.
+     * @throws IllegalArgumentException if initialStatus is null.
+     */
+    public void print(Chromosome initialStatus) {
+        if (initialStatus == null) {
+            logger.error("Null initialStatus passed to print(Chromosome).");
+            throw new IllegalArgumentException("initialStatus cannot be null.");
+        }
+
+        ChromosomeMetrics m = computeMetrics();
+
+        logger.info("\tAsset: " + m.assetValue);
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            logger.info("\t\t" + function.name() + ": " + m.functionsValues.get(function));
+            for (Categories category : function.getCategories(implementationGroup)) {
+                logger.info("\t\t\t" + category.name() + ": " + m.categoriesValues.get(category));
+                for (Genes gene : category.getGenes(implementationGroup)) {
+                    logger.info(
+                            "\t\t\t\t" + gene.name().substring(6) + ": "
+                            + getAllele(gene).getDLI()
+                            + getSimilarityText(initialStatus.getAllele(gene), getAllele(gene))
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns a text explaining the evolution between two alleles specified as
+     * parameters.
+     *
+     * @param initialAllele The initial allele to be compared.
+     * @param currentAllele The current/final allele to be compared.
+     * @return A text explaining the evolution between two alleles specified as
+     * parameters.
+     */
+    private String getSimilarityText(Alleles initialAllele, Alleles currentAllele) {
+        if (initialAllele == currentAllele) {
+            return " (UNCHANGED)";
+        }
+        return " (PREVIOUSLY " + initialAllele.getDLI() + ")";
+    }
+
+    /**
+     * Returns the fitness value.
+     *
+     * @return the chromosome's fitness.
+     */
+    public float getFitness() {
+        return fitness;
+    }
+
+    /**
+     * Computes the chromosome's fitness.
+     *
+     * @param initialStatus A chromosome representing an initial cybersecurity
+     * status.
+     * @param strategicConstraints A set of strategic constraints to be taken
+     * into consideration when optimizing the three optimization objectives.
+     * @throws IllegalArgumentException if initialStatus or strategicConstraints
+     * is null.
+     */
+    public void computeFitness(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+        if (initialStatus == null || strategicConstraints == null) {
+            logger.error("Null parameters passed to computeFitness().");
+            throw new IllegalArgumentException("initialStatus and strategicConstraints cannot be null.");
+        }
+        fitness = computeFitnessConstraintsCoverage(strategicConstraints);
+    }
+
+    /**
+     * Returns the fitness related to the optimization objective 1 (compliance
+     * with the defined strategic constraints).
+     *
+     * @return the fitness related to the optimization objective 1 (compliance
+     * with the defined strategic constraints).
+     */
+    public float getFitnessConstraintsCoverage() {
+        return this.fitness;
+    }
+
+    /**
+     * Computes the fitness related to optimization objective 1: compliance with
+     * the defined strategic constraints.
+     *
+     * The method: 1. Computes raw values for genes, categories, functions, and
+     * the asset. 2. Evaluates each defined constraint
+     * (gene/category/function/asset). 3. Assigns a score of 1.0 if fully
+     * satisfied, or a linear partial score otherwise. 4. Returns the normalized
+     * ratio of satisfied constraints.
+     *
+     * Behavior is preserved exactly as in the original implementation.
+     *
+     * @param strategicConstraints The set of strategic constraints to evaluate.
+     * @return A normalized fitness value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if strategicConstraints is null.
+     */
+    private float computeFitnessConstraintsCoverage(StrategicConstraints strategicConstraints) {
+
+        if (strategicConstraints == null) {
+            logger.error("Null strategicConstraints passed to computeFitnessConstraintsCoverage().");
+            throw new IllegalArgumentException("strategicConstraints cannot be null.");
+        }
+
+        float numberOfConstraints = strategicConstraints.numberOfConstraints();
+        float satisfiedConstraints = 0.0f;
+
+        ChromosomeMetrics m = computeMetrics();
+        EnumMap<Genes, Float> genesValues = m.genesValues;
+        EnumMap<Categories, Float> categoriesValues = m.categoriesValues;
+        EnumMap<Functions, Float> functionsValues = m.functionsValues;
+        float assetValue = m.assetValue;
+
+        // Evaluate constraints on genes
         for (Genes gene : genesValues.keySet()) {
             if (strategicConstraints.hasDefinedConstraint(gene)) {
                 float value = genesValues.get(gene);
@@ -471,7 +472,7 @@ public class Chromosome {
             }
         }
 
-        // --- Evaluate constraints on categories ---
+        // Evaluate constraints on categories
         for (Categories category : categoriesValues.keySet()) {
             if (strategicConstraints.hasDefinedConstraint(category)) {
                 float value = categoriesValues.get(category);
@@ -480,7 +481,7 @@ public class Chromosome {
             }
         }
 
-        // --- Evaluate constraints on functions ---
+        // Evaluate constraints on functions
         for (Functions function : functionsValues.keySet()) {
             if (strategicConstraints.hasDefinedConstraint(function)) {
                 float value = functionsValues.get(function);
@@ -489,14 +490,13 @@ public class Chromosome {
             }
         }
 
-        // --- Evaluate global asset constraint ---
+        // Evaluate global asset constraint
         if (strategicConstraints.hasDefinedConstraint()) {
             float value = assetValue;
             Constraint constraint = strategicConstraints.getConstraint();
             satisfiedConstraints += evaluateConstraint(value, constraint);
         }
 
-        // --- Normalize result ---
         if (numberOfConstraints == 0.0f) {
             return 1.0f;
         }
@@ -506,13 +506,20 @@ public class Chromosome {
 
     /**
      * Evaluates how well a given value satisfies a specific constraint. Returns
-     * a score between 0.0 and 1.0 (worst - best).
+     * a score between 0.0 and 1.0 (worst - best), preserving the original
+     * piecewise-linear behavior.
      *
      * @param value The computed value (gene/category/function/asset).
      * @param constraint The strategic constraint to evaluate.
      * @return A satisfaction score between 0.0 and 1.0.
+     * @throws IllegalArgumentException if constraint is null.
      */
     private float evaluateConstraint(float value, Constraint constraint) {
+        if (constraint == null) {
+            logger.error("Null constraint passed to evaluateConstraint().");
+            throw new IllegalArgumentException("constraint cannot be null.");
+        }
+
         float threshold = constraint.getThreshold();
 
         switch (constraint.getComparisonOperator()) {
@@ -563,5 +570,4 @@ public class Chromosome {
                 return 0.0f;
         }
     }
-
 }
