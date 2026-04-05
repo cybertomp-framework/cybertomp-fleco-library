@@ -55,6 +55,6 @@ public enum ComparisonOperators {
     GREATER,
     GREATER_OR_EQUAL;
     
-    private final Logger logger = LoggerFactory.getLogger(ComparisonOperators.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComparisonOperators.class);
     
 }
