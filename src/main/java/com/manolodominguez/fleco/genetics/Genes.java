@@ -42,6 +42,8 @@ package com.manolodominguez.fleco.genetics;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.FunctionalAreas;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,8 @@ import org.slf4j.LoggerFactory;
  * and also its weights as defined in CyberTOMP proposal, depending on whether
  * implementation groups 1, 2, or 3 applies. Additional descriptions and
  * auxiliar data is provided for each.
+ *
+ * @author Manuel Dominguez Dorado
  */
 public enum Genes {
     ID_AM_CSC_1_1(1f / 8f, 1f / 11f, 1f / 11f, ImplementationGroups.IG1, Categories.ID_AM, "CSC-1.1", "Establish and maintain detailed enterprise asset inventory", "Establish and maintain an accurate, detailed, and up-to-date inventory of all enterprise assets with the potential to store or process data, to include: end-user devices (including portable and mobile), network devices, non-computing/IoT devices, and servers. Ensure the inventory records the network address (if static), hardware address, machine name, enterprise asset owner, department for each asset, and whether the asset has been approved to connect to the network. For mobile end-user devices, MDM type tools can support this process, where appropriate. This inventory includes assets connected to the infrastructure physically, virtually, remotely, and those within cloud environments. Additionally, it includes assets that are regularly connected to the enterprise’s network infrastructure, even if they are not under control of the enterprise. Review and update the inventory of all enterprise assets bi-annually, or more frequently.", "CIS Critical Security Controls v8", FunctionalAreas.FA7),
@@ -221,49 +225,73 @@ public enum Genes {
     RC_IM_RC_IM_2(0f, 0f, 1f / 2f, ImplementationGroups.IG3, Categories.RC_IM, "RC.IM-2", "Recovery strategies are updated", "Create a contingency plan for the system, outlining essential functions, recovery goals, and roles for disruptions and restoration. Implement incident handling following the response plan, covering detection, analysis, containment, and recovery; align with contingency planning and incorporate lessons. Develop an incident response plan guiding implementation, structure, and organization while meeting unique organizational needs.", "NIST Cybersecurity Framework 1.1 & NIST SP 800-53 rev. 5", FunctionalAreas.FA5),
     RC_RP_RC_RP_1(0f, 0f, 1f / 1f, ImplementationGroups.IG3, Categories.RC_RP, "RC.RP-1", "Recovery plan is executed during or after a cybersecurity incident", "Develop a robust contingency plan outlining essential functions, recovery goals, and roles for disruptions. Implement incident handling following response plans, coordinating with contingency efforts, and adapting based on lessons learned. Create an incident response plan detailing the roadmap, structure, and tailored adjustments. Ensure timely system recovery according to organization-defined objectives.", "NIST Cybersecurity Framework 1.1 & NIST SP 800-53 rev. 5", FunctionalAreas.FA2);
 
-    private final float weights[] = new float[3];
-    private Categories category = Categories.DE_AE;
-    private ImplementationGroups minImplementationGroup = ImplementationGroups.IG3;
-    private String acronym = "";
-    private String purpose = "";
-    private String implementationTips = "";
-    private String references = "";
-    private FunctionalAreas leadingFunctionalArea = FunctionalAreas.FA1;
+    private final float[] weights = new float[3];
+    private final Categories category;
+    private final ImplementationGroups minImplementationGroup;
+    private final String acronym;
+    private final String purpose;
+    private final String implementationTips;
+    private final String references;
+    private final FunctionalAreas leadingFunctionalArea;
 
     private static final Logger logger = LoggerFactory.getLogger(Genes.class);
 
     /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding values.
+     * Constructs a gene/expected outcome with all required metadata. All
+     * parameters are validated before assignment.
      *
-     * @param weightIG1 A float value representing the weight of this
-     * gene/expected outcome when applying implementation group 1. A number
-     * between 0.0 and 1.0.
-     * @param weightIG2 A float value representing the weight of this
-     * gene/expected outcome when applying implementation group 2. A number
-     * between 0.0 and 1.0.
-     * @param weightIG3 A float value representing the weight of this
-     * gene/expected outcome when applying implementation group 3. A number
-     * between 0.0 and 1.0.
-     * @param minImplementationGroup The minimum implementation group the
-     * gene/expected outcome applies for. The gene/expected outcome will apply
-     * this implementation group and onwards.
-     * @param category The cybersecurity category the gene/expected outcome
-     * belongs to.
-     * @param acronym the very short name of this gene/expected outcome.
-     * @param purpose the main purpose of this of this gene/expected outcome.
-     * @param implementationTips some guidance on which kind of task should be
-     * done to achieve the gene/expected outcome.
-     * @param references references to models, framework or papers the
-     * information of this gene/expected outcome is based on.
-     * @param leadingFunctionalArea the funcional area, from the ones defined in
-     * CyberTOMP proposal, that should lead the implementation of the
-     * cybersecurity actions to achieve this gene/expected outcome.
+     * @param weightIG1 weight for Implementation Group 1 (0.0–1.0)
+     * @param weightIG2 weight for Implementation Group 2 (0.0–1.0)
+     * @param weightIG3 weight for Implementation Group 3 (0.0–1.0)
+     * @param minImplementationGroup minimum IG for which this gene applies
+     * @param category cybersecurity category this gene belongs to
+     * @param acronym short identifier for the gene
+     * @param purpose main purpose of the gene
+     * @param implementationTips guidance for achieving the gene
+     * @param references supporting references (frameworks, papers, etc.)
+     * @param leadingFunctionalArea functional area responsible for
+     * implementation
+     *
+     * @throws IllegalArgumentException if any parameter is invalid
      */
-    private Genes(float weightIG1, float weightIG2, float weightIG3, ImplementationGroups minImplementationGroup, Categories category, String acronym, String purpose, String implementationTips, String references, FunctionalAreas leadingFunctionalArea) {
+    private Genes(
+            float weightIG1,
+            float weightIG2,
+            float weightIG3,
+            ImplementationGroups minImplementationGroup,
+            Categories category,
+            String acronym,
+            String purpose,
+            String implementationTips,
+            String references,
+            FunctionalAreas leadingFunctionalArea) {
+
+        if (minImplementationGroup == null) {
+            throw new IllegalArgumentException("minImplementationGroup cannot be null for gene " + name());
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("category cannot be null for gene " + name());
+        }
+        if (acronym == null) {
+            throw new IllegalArgumentException("acronym cannot be null for gene " + name());
+        }
+        if (purpose == null) {
+            throw new IllegalArgumentException("purpose cannot be null for gene " + name());
+        }
+        if (implementationTips == null) {
+            throw new IllegalArgumentException("implementationTips cannot be null for gene " + name());
+        }
+        if (references == null) {
+            throw new IllegalArgumentException("references cannot be null for gene " + name());
+        }
+        if (leadingFunctionalArea == null) {
+            throw new IllegalArgumentException("leadingFunctionalArea cannot be null for gene " + name());
+        }
+
         this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
         this.weights[ImplementationGroups.IG2.getImplementationGroupIndex()] = weightIG2;
         this.weights[ImplementationGroups.IG3.getImplementationGroupIndex()] = weightIG3;
+
         this.minImplementationGroup = minImplementationGroup;
         this.category = category;
         this.acronym = acronym;
@@ -274,151 +302,131 @@ public enum Genes {
     }
 
     /**
-     * This method returns the weight of the gene/expected outcome taking into
-     * consideration the impleentation group that applies.
+     * Returns the weight associated with the given implementation group.
      *
-     * @param implementationGroup The implementation grou that applies.
-     * @return the weight of the gene/expected outcome taking into consideration
-     * the impleentation group that applies.
+     * @param implementationGroup the implementation group
+     * @return the weight for that group
      */
     public float getWeight(ImplementationGroups implementationGroup) {
         return this.weights[implementationGroup.getImplementationGroupIndex()];
     }
 
     /**
-     * Given an implementation group, this method returns whether the
-     * gene/expected outcome applies for it or not.
+     * Determines whether this gene applies to the specified implementation
+     * group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return true, if the gene/expected outcome applies. Otherwise, false.
+     * @param implementationGroup the implementation group to check
+     * @return {@code true} if applicable; {@code false} otherwise
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
-        return (this.minImplementationGroup.getImplementationGroupIndex() <= implementationGroup.getImplementationGroupIndex());
+        return this.minImplementationGroup.getImplementationGroupIndex()
+                <= implementationGroup.getImplementationGroupIndex();
     }
 
     /**
-     * This method returns the cybersecurity category the gene/expected outcome
-     * belongs to.
+     * Returns the cybersecurity category of this gene.
      *
-     * @return the cybersecurity category the gene/expected outcome belongs to.
+     * @return the category
      */
     public Categories getCategory() {
         return this.category;
     }
 
     /**
-     * This method returns the acronym/very short name of this gene/expected
-     * outcome.
+     * Returns the acronym or short identifier of this gene.
      *
-     * @return the acronym/very short name of this gene/expected outcome.
+     * @return the acronym
      */
     public String getAcronym() {
         return this.acronym;
     }
 
     /**
-     * This method returns the main purpose of this of this gene/expected
-     * outcome.
+     * Returns the main purpose of this gene.
      *
-     * @return the main purpose of this of this gene/expected outcome.
+     * @return the purpose text
      */
     public String getPurpose() {
         return this.purpose;
     }
 
     /**
-     * This method returns implementation tips/guidance on which kind of task
-     * should be done to achieve the gene/expected outcome.
+     * Returns implementation guidance for achieving this gene.
      *
-     * @return implementation tips/guidance on which kind of task should be done
-     * to achieve the gene/expected outcome.
+     * @return implementation tips
      */
     public String getImplementationTips() {
         return this.implementationTips;
     }
 
     /**
-     * This method returns references to models, framework or papers the
-     * information of this gene/expected outcome is based on.
+     * Returns references supporting this gene.
      *
-     * @return references to models, framework or papers the information of this
-     * gene/expected outcome is based on.
+     * @return reference text
      */
     public String getReferences() {
         return this.references;
     }
 
     /**
-     * This method returns the funcional area, from the ones defined in
-     * CyberTOMP proposal, that should lead the implementation of the
-     * cybersecurity actions to achieve this gene/expected outcome.
+     * Returns the functional area responsible for implementing this gene.
      *
-     * @return the funcional area, from the ones defined in CyberTOMP proposal,
-     * that should lead the implementation of the cybersecurity actions to
-     * achieve this gene/expected outcome.
+     * @return the leading functional area
      */
     public FunctionalAreas getLeadingFunctionalArea() {
         return this.leadingFunctionalArea;
     }
 
     /**
-     * This method returns the list of genes that belongs to a given
-     * cybersecurity category and are applicable for a given implementation
-     * group.
+     * Returns all genes belonging to the specified category and applicable to
+     * the given implementation group.
      *
-     * @param category The cybersecurity category whose genes/expected outcomes
-     * are required.
-     * @param implementationGroup The applicable implementation group.
-     * @return the list of genes that belongs to a given cybersecurity category
-     * and are applicable for a given implementation group.
+     * @param category the category to filter by
+     * @param implementationGroup the implementation group
+     * @return a list of matching genes
      */
-    public static CopyOnWriteArrayList<Genes> getGenesFor(Categories category, ImplementationGroups implementationGroup) {
-        CopyOnWriteArrayList<Genes> genesList = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Genes> getGenesFor(
+            Categories category,
+            ImplementationGroups implementationGroup) {
+
+        CopyOnWriteArrayList<Genes> list = new CopyOnWriteArrayList<>();
         for (Genes gene : Genes.values()) {
-            if (gene.appliesToIG(implementationGroup) && (gene.getCategory() == category)) {
-                genesList.add(gene);
+            if (gene.category == category && gene.appliesToIG(implementationGroup)) {
+                list.add(gene);
             }
         }
-        return genesList;
+        return list;
     }
 
     /**
-     * This method returns the list of genes that are applicable for a given
-     * implementation group.
+     * Returns all genes applicable to the specified implementation group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return the list of genes that are applicable for a given implementation
-     * group.
+     * @param implementationGroup the implementation group
+     * @return a list of applicable genes
      */
-    public static CopyOnWriteArrayList<Genes> getGenesFor(ImplementationGroups implementationGroup) {
-        CopyOnWriteArrayList<Genes> genesList = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Genes> getGenesFor(
+            ImplementationGroups implementationGroup) {
+
+        CopyOnWriteArrayList<Genes> list = new CopyOnWriteArrayList<>();
         for (Genes gene : Genes.values()) {
             if (gene.appliesToIG(implementationGroup)) {
-                genesList.add(gene);
+                list.add(gene);
             }
         }
-        return genesList;
+        return list;
     }
 
+    /**
+     * Prints a diagnostic representation of all genes and their applicability
+     * across IG1, IG2, and IG3.
+     */
     public static void print() {
         logger.info("");
         for (Genes gene : Genes.values()) {
             logger.info(gene.name());
-            if (gene.appliesToIG(ImplementationGroups.IG1)) {
-                logger.info("#1");
-            } else {
-                logger.info("#0");
-            }
-            if (gene.appliesToIG(ImplementationGroups.IG2)) {
-                logger.info("#1");
-            } else {
-                logger.info("#0");
-            }
-            if (gene.appliesToIG(ImplementationGroups.IG3)) {
-                logger.info("#1");
-            } else {
-                logger.info("#0");
-            }
+            logger.info(gene.appliesToIG(ImplementationGroups.IG1) ? "#1" : "#0");
+            logger.info(gene.appliesToIG(ImplementationGroups.IG2) ? "#1" : "#0");
+            logger.info(gene.appliesToIG(ImplementationGroups.IG3) ? "#1" : "#0");
             logger.info("");
         }
     }
