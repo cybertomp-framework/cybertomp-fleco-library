@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Each enum constant follows a naming convention that reflects its mapping to
  * the NIST Cybersecurity Framework v1.1: the prefix encodes the NIST Function
- * and Category (e.g., DE_AE = Detect / Anomalies & Events), and the numeric
+ * and Category (e.g., DE_AE = Detect / Anomalies and Events), and the numeric
  * suffix identifies the specific expected outcome within that category.</p>
  *
  * <p>
