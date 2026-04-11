@@ -82,11 +82,11 @@ import org.slf4j.LoggerFactory;
  */
 public class StrategicConstraints {
 
-    private EnumMap<Genes, Constraint> geneConstraints;
-    private EnumMap<Categories, Constraint> categoryConstraints;
-    private EnumMap<Functions, Constraint> functionConstraints;
+    private final EnumMap<Genes, Constraint> geneConstraints;
+    private final EnumMap<Categories, Constraint> categoryConstraints;
+    private final EnumMap<Functions, Constraint> functionConstraints;
     private Constraint assetConstraint;
-    private ImplementationGroups implementationGroup;
+    private final ImplementationGroups implementationGroup;
 
     private final Logger logger = LoggerFactory.getLogger(StrategicConstraints.class);
 
@@ -109,9 +109,9 @@ public class StrategicConstraints {
      * levels.
      */
     public void removeAll() {
-        geneConstraints = new EnumMap<>(Genes.class);
-        categoryConstraints = new EnumMap<>(Categories.class);
-        functionConstraints = new EnumMap<>(Functions.class);
+        this.geneConstraints.clear();
+        this.categoryConstraints.clear();
+        this.functionConstraints.clear();
         this.assetConstraint = null;
     }
 
