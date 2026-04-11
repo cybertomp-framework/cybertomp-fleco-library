@@ -51,10 +51,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a set of strategic cybersecurity constraints. They are
- * defined as target values of metrics coming from CyberTOMP proposal. The
- * purpose of this class is to guide the evolution of FLECO towards a solution
- * that fulfills all strategic constraints.
+ * Represents the set of strategic cybersecurity constraints used by the
+ * CyberTOMP® Framework to guide the evolution of the FLECO genetic algorithm.
+ *
+ * <p>
+ * Each constraint expresses a target value for a cybersecurity metric derived
+ * from the Unified List of Expected Outcomes (ULEO). These constraints can be
+ * defined at four levels of abstraction:</p>
+ *
+ * <ul>
+ * <li><strong>Gene level</strong> — constraints applied to individual expected
+ * outcomes (Genes).</li>
+ *
+ * <li><strong>Category level</strong> — constraints applied to Categories.</li>
+ *
+ * <li><strong>Function level</strong> — constraints applied to Functions.</li>
+ *
+ * <li><strong>Asset level</strong> — a global constraint representing the
+ * overall cybersecurity posture required for the protected asset.</li>
+ * </ul>
+ *
+ * <p>
+ * Constraints are only applied when they are compatible with the asset’s
+ * Implementation Group (IG), ensuring that strategic objectives remain aligned
+ * with the asset’s criticality. These constraints are later used to generate
+ * high‑quality candidate chromosomes that serve as part of FLECO’s initial
+ * population.</p>
  *
  * @author Manuel Domínguez-Dorado
  */
@@ -67,8 +89,7 @@ public class StrategicConstraints {
     private ImplementationGroups implementationGroup;
 
     private final Logger logger = LoggerFactory.getLogger(StrategicConstraints.class);
-    
-    
+
     /**
      * This is the constructor of the class. It creates a new, empty instance.
      *
@@ -464,44 +485,44 @@ public class StrategicConstraints {
         int constraintsNum = 0;
         if (constraintsNum < totalConstraints) {
             if (assetConstraint != null) {
-                JSONString+="\t\t{\"asset\":\"ASSET\",\"operator\":\""+assetConstraint.getComparisonOperator()+"\",\"value\":" + assetConstraint.getThreshold() + "}";
+                JSONString += "\t\t{\"asset\":\"ASSET\",\"operator\":\"" + assetConstraint.getComparisonOperator() + "\",\"value\":" + assetConstraint.getThreshold() + "}";
                 if (constraintsNum < (totalConstraints - 1)) {
-                    JSONString+=",\n";
+                    JSONString += ",\n";
                 } else {
-                    JSONString+="\n";
+                    JSONString += "\n";
                 }
                 constraintsNum++;
             }
         }
         for (Categories category : categoryConstraints.keySet()) {
             if (constraintsNum < totalConstraints) {
-                JSONString += "\t\t{\"category\":\""+category+"\",\"operator\":\""+categoryConstraints.get(category).getComparisonOperator()+"\",\"value\":" + categoryConstraints.get(category).getThreshold() + "}";
+                JSONString += "\t\t{\"category\":\"" + category + "\",\"operator\":\"" + categoryConstraints.get(category).getComparisonOperator() + "\",\"value\":" + categoryConstraints.get(category).getThreshold() + "}";
                 if (constraintsNum < (totalConstraints - 1)) {
-                    JSONString+=",\n";
+                    JSONString += ",\n";
                 } else {
-                    JSONString+="\n";
+                    JSONString += "\n";
                 }
                 constraintsNum++;
             }
         }
         for (Functions function : functionConstraints.keySet()) {
             if (constraintsNum < totalConstraints) {
-                JSONString += "\t\t{\"function\":\""+function+"\",\"operator\":\""+functionConstraints.get(function).getComparisonOperator()+"\",\"value\":" + functionConstraints.get(function).getThreshold() + "}";
+                JSONString += "\t\t{\"function\":\"" + function + "\",\"operator\":\"" + functionConstraints.get(function).getComparisonOperator() + "\",\"value\":" + functionConstraints.get(function).getThreshold() + "}";
                 if (constraintsNum < (totalConstraints - 1)) {
-                    JSONString+=",\n";
+                    JSONString += ",\n";
                 } else {
-                    JSONString+="\n";
+                    JSONString += "\n";
                 }
                 constraintsNum++;
             }
         }
         for (Genes gene : geneConstraints.keySet()) {
             if (constraintsNum < totalConstraints) {
-                JSONString += "\t\t{\"gene\":\""+gene+"\",\"operator\":\""+geneConstraints.get(gene).getComparisonOperator()+"\",\"value\":"+ geneConstraints.get(gene).getThreshold() + "}";
+                JSONString += "\t\t{\"gene\":\"" + gene + "\",\"operator\":\"" + geneConstraints.get(gene).getComparisonOperator() + "\",\"value\":" + geneConstraints.get(gene).getThreshold() + "}";
                 if (constraintsNum < (totalConstraints - 1)) {
-                    JSONString+=",\n";
+                    JSONString += ",\n";
                 } else {
-                    JSONString+="\n";
+                    JSONString += "\n";
                 }
                 constraintsNum++;
             }
