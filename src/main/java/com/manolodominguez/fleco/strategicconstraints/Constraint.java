@@ -39,49 +39,65 @@
  */
 package com.manolodominguez.fleco.strategicconstraints;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * This class implements a strategic constraint that consist of a comparison
- * operator and a thresshold value it refers to.
- *
- * @author Manuel Domínguez-Dorado
+ * Represents a strategic constraint composed of a comparison operator and a
+ * normalized threshold value. Constraints are used within the CyberTOMP®
+ * Framework and the FLECO genetic algorithm to evaluate whether a given
+ * cybersecurity metric or expected outcome satisfies a strategic requirement.
  */
-public class Constraint {
-
-    private ComparisonOperators comparisonOperator;
-    private float thresshold;
-
-    private final Logger logger = LoggerFactory.getLogger(Constraint.class);
+public final class Constraint {
 
     /**
-     * This is the constructor of the class. It sets the initial values of all
-     * attributes and create a new instance.
-     *
-     * @param operator A comparison operator.
-     * @param thresshold A normalized float value, between 0.0 and 1.0, that
-     * represents a percentaje between 0% and 100% and is related to the defined
-     * operator.
+     * The comparison operator used by this constraint.
      */
-    public Constraint(ComparisonOperators operator, float thresshold) {
+    private final ComparisonOperators comparisonOperator;
+
+    /**
+     * A normalized threshold value between 0.0 and 1.0, representing a
+     * percentage between 0% and 100%.
+     */
+    private final float threshold;
+
+    /**
+     * Creates a new strategic constraint.
+     *
+     * @param operator the comparison operator (must not be null)
+     * @param threshold a normalized value between 0.0 and 1.0
+     *
+     * @throws IllegalArgumentException if the operator is null or the threshold
+     * is not a finite value within [0.0, 1.0]
+     */
+    public Constraint(ComparisonOperators operator, float threshold) {
+
+        if (operator == null) {
+            throw new IllegalArgumentException("Comparison operator cannot be null.");
+        }
+
+        if (Float.isNaN(threshold) || Float.isInfinite(threshold)) {
+            throw new IllegalArgumentException("Threshold must be a finite number.");
+        }
+
+        if (threshold < 0.0f || threshold > 1.0f) {
+            throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0.");
+        }
+
         this.comparisonOperator = operator;
-        this.thresshold = thresshold;
+        this.threshold = threshold;
     }
 
     /**
-     * This method returns the the thresshold of this strategic constraint.
+     * Returns the threshold of this strategic constraint.
      *
-     * @return the thresshold of this strategic constraint.
+     * @return the normalized threshold value.
      */
     public float getThreshold() {
-        return thresshold;
+        return threshold;
     }
 
     /**
-     * This method returns the comparison operator of this strategic constraint.
+     * Returns the comparison operator of this strategic constraint.
      *
-     * @return the comparison operator of this strategic constraint.
+     * @return the comparison operator.
      */
     public ComparisonOperators getComparisonOperator() {
         return comparisonOperator;

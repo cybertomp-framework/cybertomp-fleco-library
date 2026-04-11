@@ -39,22 +39,36 @@
  */
 package com.manolodominguez.fleco.strategicconstraints;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * This enum define the available comparison operators that are used when
- * defining strategic cybersecurity constraints.
+ * Defines the comparison operators available when expressing strategic
+ * cybersecurity constraints within the CyberTOMP® Framework and the FLECO
+ * genetic algorithm.
  *
- * @author Manuel Domínguez-Dorado
+ * <p>
+ * These operators are used to evaluate whether a given cybersecurity metric,
+ * score, or expected outcome satisfies a constraint defined in a strategic
+ * cybersecurity model.</p>
  */
 public enum ComparisonOperators {
+
+    /**
+     * Strictly less than.
+     */
     LESS,
+    /**
+     * Less than or equal to.
+     */
     LESS_OR_EQUAL,
+    /**
+     * Equal to.
+     */
     EQUAL,
+    /**
+     * Strictly greater than.
+     */
     GREATER,
+    /**
+     * Greater than or equal to.
+     */
     GREATER_OR_EQUAL;
-    
-    private static final Logger logger = LoggerFactory.getLogger(ComparisonOperators.class);
-    
 }
