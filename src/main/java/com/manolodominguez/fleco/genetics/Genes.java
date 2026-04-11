@@ -42,8 +42,6 @@ package com.manolodominguez.fleco.genetics;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.FunctionalAreas;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +51,47 @@ import org.slf4j.LoggerFactory;
  * and also its weights as defined in CyberTOMP proposal, depending on whether
  * implementation groups 1, 2, or 3 applies. Additional descriptions and
  * auxiliar data is provided for each.
+ *
+ * This is the Unified List of Expected Outcomes (ULEO) used by the CyberTOMP®
+ * Framework and the FLECO genetic algorithm.
+ *
+ * <p>
+ * Each enum constant follows a naming convention that reflects its mapping to
+ * the NIST Cybersecurity Framework v1.1: the prefix encodes the NIST Function
+ * and Category (e.g., DE_AE = Detect / Anomalies & Events), and the numeric
+ * suffix identifies the specific expected outcome within that category.</p>
+ *
+ * <p>
+ * CyberTOMP® Framework adopts NIST CSF v1.1 as its structural foundation but
+ * expands and reorganizes it into a more detailed and comprehensive model.
+ * Expected outcomes are enriched with controls and practices from additional
+ * sources when they provide a more complete or actionable perspective.</p>
+ *
+ * <p>
+ * The expected outcomes represented in this enum originate from three
+ * sources:</p>
+ * <ul>
+ * <li><strong>NIST CSF v1.1</strong> — when the expected outcome directly
+ * corresponds to a NIST Subcategory.</li>
+ *
+ * <li><strong>CIS Controls v8</strong> — when a CIS Safeguard complements or
+ * operationalizes a NIST Subcategory with more implementation-oriented
+ * detail.</li>
+ *
+ * <li><strong>Scientific work on the “9Ds of Cybersecurity”</strong> —
+ * specifically the conceptual model described in: K. S. Wilson and M. A. Kiy,
+ * “Some Fundamental Cybersecurity Concepts,” IEEE Access, vol. 2, pp. 116–124,
+ * 2014, doi: 10.1109/ACCESS.2014.2305658. These contributions are used when
+ * NIST or CIS provide limited strategic granularity.</li>
+ * </ul>
+ *
+ * <p>
+ * Together, these sources form the ULEO (Unified List of Expected Outcomes)
+ * used by the CyberTOMP® Framework. This enum is the programmatic
+ * representation of that unified list, where each value represents a
+ * cybersecurity expected outcome contributing to a NIST-aligned function and
+ * category, enriched when appropriate with CIS v8 guidance or 9Ds-derived
+ * strategic principles.</p>
  *
  * @author Manuel Dominguez Dorado
  */
@@ -266,26 +305,15 @@ public enum Genes {
             String references,
             FunctionalAreas leadingFunctionalArea) {
 
-        if (minImplementationGroup == null) {
-            throw new IllegalArgumentException("minImplementationGroup cannot be null for gene " + name());
-        }
-        if (category == null) {
-            throw new IllegalArgumentException("category cannot be null for gene " + name());
-        }
-        if (acronym == null) {
-            throw new IllegalArgumentException("acronym cannot be null for gene " + name());
-        }
-        if (purpose == null) {
-            throw new IllegalArgumentException("purpose cannot be null for gene " + name());
-        }
-        if (implementationTips == null) {
-            throw new IllegalArgumentException("implementationTips cannot be null for gene " + name());
-        }
-        if (references == null) {
-            throw new IllegalArgumentException("references cannot be null for gene " + name());
-        }
-        if (leadingFunctionalArea == null) {
-            throw new IllegalArgumentException("leadingFunctionalArea cannot be null for gene " + name());
+        if (minImplementationGroup == null
+                || category == null
+                || acronym == null
+                || purpose == null
+                || implementationTips == null
+                || references == null
+                || leadingFunctionalArea == null) {
+
+            throw new IllegalArgumentException("None of the Genes constructor parameters can be null.");
         }
 
         this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
@@ -304,10 +332,17 @@ public enum Genes {
     /**
      * Returns the weight associated with the given implementation group.
      *
-     * @param implementationGroup the implementation group
+     * @param implementationGroup the implementation group; must not be
+     * {@code null}
      * @return the weight for that group
+     * @throws IllegalArgumentException if {@code implementationGroup} is
+     * {@code null}
      */
     public float getWeight(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getWeight() for gene {}.", name());
+            throw new IllegalArgumentException("implementationGroup cannot be null.");
+        }
         return this.weights[implementationGroup.getImplementationGroupIndex()];
     }
 
@@ -315,10 +350,17 @@ public enum Genes {
      * Determines whether this gene applies to the specified implementation
      * group.
      *
-     * @param implementationGroup the implementation group to check
+     * @param implementationGroup the implementation group to check; must not be
+     * {@code null}
      * @return {@code true} if applicable; {@code false} otherwise
+     * @throws IllegalArgumentException if {@code implementationGroup} is
+     * {@code null}
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to appliesToIG() for gene {}.", name());
+            throw new IllegalArgumentException("implementationGroup cannot be null.");
+        }
         return this.minImplementationGroup.getImplementationGroupIndex()
                 <= implementationGroup.getImplementationGroupIndex();
     }
@@ -381,13 +423,20 @@ public enum Genes {
      * Returns all genes belonging to the specified category and applicable to
      * the given implementation group.
      *
-     * @param category the category to filter by
-     * @param implementationGroup the implementation group
+     * @param category the category to filter by; must not be {@code null}
+     * @param implementationGroup the implementation group; must not be
+     * {@code null}
      * @return a list of matching genes
+     * @throws IllegalArgumentException if any parameter is {@code null}
      */
     public static CopyOnWriteArrayList<Genes> getGenesFor(
             Categories category,
             ImplementationGroups implementationGroup) {
+
+        if (category == null || implementationGroup == null) {
+            logger.error("Null category or implementationGroup passed to getGenesFor(category, IG).");
+            throw new IllegalArgumentException("category and implementationGroup cannot be null.");
+        }
 
         CopyOnWriteArrayList<Genes> list = new CopyOnWriteArrayList<>();
         for (Genes gene : Genes.values()) {
@@ -401,11 +450,19 @@ public enum Genes {
     /**
      * Returns all genes applicable to the specified implementation group.
      *
-     * @param implementationGroup the implementation group
+     * @param implementationGroup the implementation group; must not be
+     * {@code null}
      * @return a list of applicable genes
+     * @throws IllegalArgumentException if {@code implementationGroup} is
+     * {@code null}
      */
     public static CopyOnWriteArrayList<Genes> getGenesFor(
             ImplementationGroups implementationGroup) {
+
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getGenesFor(IG).");
+            throw new IllegalArgumentException("implementationGroup cannot be null.");
+        }
 
         CopyOnWriteArrayList<Genes> list = new CopyOnWriteArrayList<>();
         for (Genes gene : Genes.values()) {
