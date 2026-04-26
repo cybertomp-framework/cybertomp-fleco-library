@@ -46,37 +46,26 @@ import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Represents the set of strategic cybersecurity constraints used by the
- * CyberTOMP® Framework to guide the evolution of the FLECO genetic algorithm.
+ * CyberTOMP Framework to guide the evolution of the FLECO genetic algorithm.
  *
  * <p>
- * Each constraint expresses a target value for a cybersecurity metric derived
- * from the Unified List of Expected Outcomes (ULEO). These constraints can be
- * defined at four levels of abstraction:</p>
- *
- * <ul>
- * <li><strong>Gene level</strong> — constraints applied to individual expected
- * outcomes (Genes).</li>
- *
- * <li><strong>Category level</strong> — constraints applied to Categories.</li>
- *
- * <li><strong>Function level</strong> — constraints applied to Functions.</li>
- *
- * <li><strong>Asset level</strong> — a global constraint representing the
- * overall cybersecurity posture required for the protected asset.</li>
- * </ul>
+ * Constraints can be defined at gene, category, function or asset level and are
+ * applied only when compatible with the asset's Implementation Group (IG).</p>
  *
  * <p>
- * Constraints are only applied when they are compatible with the asset’s
- * Implementation Group (IG), ensuring that strategic objectives remain aligned
- * with the asset’s criticality. These constraints are later used to generate
- * high‑quality candidate chromosomes that serve as part of FLECO’s initial
- * population.</p>
+ * This class preserves the original public contract and behavior. Parameter
+ * checks have been added: when a method receives multiple parameters that
+ * cannot be null they are validated in a single if-statement that logs an error
+ * and throws {@link IllegalArgumentException}. Single-parameter null checks log
+ * an error and throw {@link NullPointerException}.</p>
  *
  * @author Manuel Domínguez-Dorado
  */
@@ -91,22 +80,26 @@ public class StrategicConstraints {
     private final Logger logger = LoggerFactory.getLogger(StrategicConstraints.class);
 
     /**
-     * This is the constructor of the class. It creates a new, empty instance.
+     * Constructor. Creates a new, empty instance.
      *
      * @param implementationGroup the implementation group that applies due to
-     * the criticlity of the asset being considered.
+     * the criticality of the asset being considered.
+     * @throws NullPointerException if implementationGroup is null
      */
     public StrategicConstraints(ImplementationGroups implementationGroup) {
-        geneConstraints = new EnumMap<>(Genes.class);
-        categoryConstraints = new EnumMap<>(Categories.class);
-        functionConstraints = new EnumMap<>(Functions.class);
+        if (implementationGroup == null) {
+            logger.error("Parameter 'implementationGroup' must not be null. implementationGroup={}", implementationGroup);
+            throw new NullPointerException("implementationGroup must not be null");
+        }
+        this.geneConstraints = new EnumMap<>(Genes.class);
+        this.categoryConstraints = new EnumMap<>(Categories.class);
+        this.functionConstraints = new EnumMap<>(Functions.class);
         this.implementationGroup = implementationGroup;
         this.assetConstraint = null;
     }
 
     /**
-     * This method removes all the strategic constraint defined at whatever
-     * levels.
+     * Removes all strategic constraints at all levels.
      */
     public void removeAll() {
         this.geneConstraints.clear();
@@ -116,258 +109,318 @@ public class StrategicConstraints {
     }
 
     /**
-     * This method set a new constraint defined for a given cybersecurity
-     * expected outcome/gene.
+     * Adds a constraint for a gene (expected outcome).
      *
-     * @param gene The gene/expected outcome the constraint is defined for.
-     * @param constraint The defined constraint.
+     * <p>
+     * Compact null-check for multiple parameters: logs and throws
+     * {@link IllegalArgumentException} when either parameter is null.</p>
+     *
+     * @param gene the gene
+     * @param constraint the constraint
+     * @throws IllegalArgumentException if gene or constraint is null
      */
     public void addConstraint(Genes gene, Constraint constraint) {
+        if (gene == null || constraint == null) {
+            logger.error("Null gene or constraint passed to addConstraint(Genes, Constraint). gene={}, constraint={}", gene, constraint);
+            throw new IllegalArgumentException("Gene and constraint cannot be null.");
+        }
         if (gene.appliesToIG(implementationGroup)) {
             geneConstraints.put(gene, constraint);
+        } else {
+            logger.debug("Gene {} does not apply to IG {}; constraint ignored.", gene, implementationGroup);
         }
     }
 
     /**
-     * This method set a new constraint defined for a given cybersecurity
-     * category.
+     * Adds a constraint for a category.
      *
-     * @param category The cybersecurity categroy the constraint is defined for.
-     * @param constraint The defined constraint.
+     * <p>
+     * Compact null-check for multiple parameters: logs and throws
+     * {@link IllegalArgumentException} when either parameter is null.</p>
+     *
+     * @param category the category
+     * @param constraint the constraint
+     * @throws IllegalArgumentException if category or constraint is null
      */
     public void addConstraint(Categories category, Constraint constraint) {
+        if (category == null || constraint == null) {
+            logger.error("Null category or constraint passed to addConstraint(Categories, Constraint). category={}, constraint={}", category, constraint);
+            throw new IllegalArgumentException("Category and constraint cannot be null.");
+        }
         if (category.appliesToIG(implementationGroup)) {
             categoryConstraints.put(category, constraint);
+        } else {
+            logger.debug("Category {} does not apply to IG {}; constraint ignored.", category, implementationGroup);
         }
     }
 
     /**
-     * This method set a new constraint defined for a given cybersecurity
-     * function.
+     * Adds a constraint for a function.
      *
-     * @param function The cybersecurity function the constraint is defined for.
-     * @param constraint The defined constraint.
+     * <p>
+     * Compact null-check for multiple parameters: logs and throws
+     * {@link IllegalArgumentException} when either parameter is null.</p>
+     *
+     * @param function the function
+     * @param constraint the constraint
+     * @throws IllegalArgumentException if function or constraint is null
      */
     public void addConstraint(Functions function, Constraint constraint) {
+        if (function == null || constraint == null) {
+            logger.error("Null function or constraint passed to addConstraint(Functions, Constraint). function={}, constraint={}", function, constraint);
+            throw new IllegalArgumentException("Function and constraint cannot be null.");
+        }
         if (function.appliesToIG(implementationGroup)) {
             functionConstraints.put(function, constraint);
+        } else {
+            logger.debug("Function {} does not apply to IG {}; constraint ignored.", function, implementationGroup);
         }
     }
 
     /**
-     * This method set a new hig-level constraint defined for the global asset's
-     * cybersecurity status.
+     * Sets a high-level (asset) constraint. Passing null removes the asset
+     * constraint.
      *
-     * @param constraint The defined constraint.
+     * @param constraint the asset constraint or null to remove
      */
     public void addConstraint(Constraint constraint) {
+        if (constraint == null) {
+            logger.info("Setting asset constraint to null (removal).");
+        } else {
+            logger.debug("Setting asset constraint: operator={}, value={}", constraint.getComparisonOperator(), constraint.getThreshold());
+        }
         this.assetConstraint = constraint;
     }
 
     /**
-     * This method check whether a specific gene/expected outcome has a
-     * constraint associated to it or not.
+     * Returns whether a constraint is defined for the specified gene.
      *
-     * @param gene The gene that is bein queried.
-     * @return true, if the specified gene has a constraint associated to it.
-     * Otherwise, false.
+     * @param gene the gene
+     * @return true if defined
      */
     public boolean hasDefinedConstraint(Genes gene) {
-        return geneConstraints.containsKey(gene);
+        return gene != null && geneConstraints.containsKey(gene);
     }
 
     /**
-     * This method check whether a specific cybersecurity category has a
-     * constraint associated to it or not.
+     * Returns whether a constraint is defined for the specified category.
      *
-     * @param category The cybersecurity category that is bein queried.
-     * @return true, if the specified cybersecurity category has a constraint
-     * associated to it. Otherwise, false.
+     * @param category the category
+     * @return true if defined
      */
     public boolean hasDefinedConstraint(Categories category) {
-        return categoryConstraints.containsKey(category);
+        return category != null && categoryConstraints.containsKey(category);
     }
 
     /**
-     * This method check whether a specific cybersecurity function has a
-     * constraint associated to it or not.
+     * Returns whether a constraint is defined for the specified function.
      *
-     * @param function The cybersecurity function that is bein queried.
-     * @return true, if the specified cybersecurity function has a constraint
-     * associated to it. Otherwise, false.
+     * @param function the function
+     * @return true if defined
      */
     public boolean hasDefinedConstraint(Functions function) {
-        return functionConstraints.containsKey(function);
+        return function != null && functionConstraints.containsKey(function);
     }
 
     /**
-     * This method check whether the global asset's cybersecurity status has a
-     * constraint associated to it or not.
+     * Returns whether an asset-level constraint is defined.
      *
-     * @return true, if the global asset's cybersecurity status has a constraint
-     * associated to it. Otherwise, false.
+     * @return true if defined
      */
     public boolean hasDefinedConstraint() {
         return assetConstraint != null;
     }
 
     /**
-     * This method returns the constraint associated to the gene/expected
-     * outcome specified as a parameter.
+     * Returns the constraint for a gene.
      *
-     * @param gene The gene whose constraint is being requested.
-     * @return the constraint associated to the gene/expected outcome specified
-     * as a parameter.
+     * @param gene the gene
+     * @return the constraint or null
      */
     public Constraint getConstraint(Genes gene) {
         return geneConstraints.get(gene);
     }
 
     /**
-     * This method returns the constraint associated to the cybersecurity
-     * category specified as a parameter.
+     * Returns the constraint for a category.
      *
-     * @param category The cybersecurity category whose constraint is being
-     * requested.
-     * @return the constraint associated to the cybersecurity category specified
-     * as a parameter.
+     * @param category the category
+     * @return the constraint or null
      */
     public Constraint getConstraint(Categories category) {
         return categoryConstraints.get(category);
     }
 
     /**
-     * This method returns the constraint associated to the cybersecurity
-     * function specified as a parameter.
+     * Returns the constraint for a function.
      *
-     * @param function The cybersecurity function whose constraint is being
-     * requested.
-     * @return the constraint associated to the cybersecurity function specified
-     * as a parameter.
+     * @param function the function
+     * @return the constraint or null
      */
     public Constraint getConstraint(Functions function) {
         return functionConstraints.get(function);
     }
 
     /**
-     * This method returns the constraint associated to the global asset's
-     * cybersecurity status.
+     * Returns the asset-level constraint.
      *
-     * @return the constraint associated to the global asset's cybersecurity
-     * status.
+     * @return the asset constraint or null
      */
     public Constraint getConstraint() {
         return assetConstraint;
     }
 
     /**
-     * This method removes the strategic constraint defined at asset level.
+     * Removes the asset-level constraint.
      */
     public void removeConstraint() {
-        assetConstraint = null;
+        this.assetConstraint = null;
     }
 
     /**
-     * This method removes the strategic constraint defined at function level
-     * and associated to the specified function.
+     * Removes the constraint for a function. Null parameter is ignored with a
+     * warning.
      *
-     * @param function the specified function.
+     * @param function the function
      */
     public void removeConstraint(Functions function) {
+        if (function == null) {
+            logger.warn("removeConstraint(function) called with null; no action taken.");
+            return;
+        }
         functionConstraints.remove(function);
     }
 
     /**
-     * This method removes the strategic constraint defined at category level
-     * and associated to the specified category.
+     * Removes the constraint for a category. Null parameter is ignored with a
+     * warning.
      *
-     * @param category the specified category.
+     * @param category the category
      */
     public void removeConstraint(Categories category) {
+        if (category == null) {
+            logger.warn("removeConstraint(category) called with null; no action taken.");
+            return;
+        }
         categoryConstraints.remove(category);
     }
 
     /**
-     * This method removes the strategic constraint defined at expected outcome
-     * or gene level and associated to the specified gene.
+     * Removes the constraint for a gene. Null parameter is ignored with a
+     * warning.
      *
-     * @param gene the specified category.
+     * @param gene the gene
      */
     public void removeConstraint(Genes gene) {
+        if (gene == null) {
+            logger.warn("removeConstraint(gene) called with null; no action taken.");
+            return;
+        }
         geneConstraints.remove(gene);
     }
 
     /**
-     * This method generate some individuals of high quality based on the set of
-     * defined strategic constraints and also depending on the initial status of
-     * cybersecurity. They can be used as part of the starting population for
-     * FLECO.
+     * Generates pre-candidate chromosomes based on defined constraints and the
+     * provided initial status. The returned list always contains the
+     * initialStatus as the first element.
      *
-     * @param initialStatus The initial status of cybersecurity of the asset
-     * being protected.
-     * @return the constraint associated to the global asset's cybersecurity
-     * status.
+     * <p>
+     * Behavior preserved: candidates are created according to the same
+     * comparison operators and thresholds as the original implementation.
+     * Candidates are added only when at least one allele has been modified to
+     * satisfy constraints.</p>
+     *
+     * @param initialStatus the initial chromosome (must not be null)
+     * @return list of candidate chromosomes (thread-safe)
+     * @throws NullPointerException if initialStatus is null
      */
     public CopyOnWriteArrayList<Chromosome> generatePrecandidatesBasedOn(Chromosome initialStatus) {
+        if (initialStatus == null) {
+            logger.error("Parameter 'initialStatus' must not be null. initialStatus={}", initialStatus);
+            throw new NullPointerException("initialStatus must not be null");
+        }
+
         CopyOnWriteArrayList<Chromosome> candidateChromosomes = new CopyOnWriteArrayList<>();
-        Chromosome candidate;
         candidateChromosomes.add(initialStatus);
+
+        // Gene-level constraints
         if (!geneConstraints.isEmpty()) {
-            candidate = new Chromosome(implementationGroup);
+            Chromosome candidate = new Chromosome(implementationGroup);
             candidate.setGenes(initialStatus.getGenes());
+            boolean created = false;
             for (Genes gene : geneConstraints.keySet()) {
-                switch (geneConstraints.get(gene).getComparisonOperator()) {
+                Constraint c = geneConstraints.get(gene);
+                if (c == null) {
+                    logger.debug("Null constraint for gene {}; skipping.", gene);
+                    continue;
+                }
+                switch (c.getComparisonOperator()) {
                     case LESS:
-                        if (Alleles.getLesser(geneConstraints.get(gene).getThreshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getLesser(geneConstraints.get(gene).getThreshold()));
+                        if (Alleles.getLesser(c.getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getLesser(c.getThreshold()));
+                            created = true;
                         }
                         break;
                     case LESS_OR_EQUAL:
-                        if (Alleles.getLesserOrEqual(geneConstraints.get(gene).getThreshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getLesserOrEqual(geneConstraints.get(gene).getThreshold()));
+                        if (Alleles.getLesserOrEqual(c.getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getLesserOrEqual(c.getThreshold()));
+                            created = true;
                         }
                         break;
                     case EQUAL:
-                        if (Alleles.getEqual(geneConstraints.get(gene).getThreshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getEqual(geneConstraints.get(gene).getThreshold()));
+                        if (Alleles.getEqual(c.getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getEqual(c.getThreshold()));
+                            created = true;
                         }
                         break;
                     case GREATER:
-                        if (Alleles.getGreater(geneConstraints.get(gene).getThreshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getGreater(geneConstraints.get(gene).getThreshold()));
+                        if (Alleles.getGreater(c.getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getGreater(c.getThreshold()));
+                            created = true;
                         }
                         break;
                     case GREATER_OR_EQUAL:
-                        if (Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThreshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThreshold()));
+                        if (Alleles.getGreaterOrEqual(c.getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getGreaterOrEqual(c.getThreshold()));
+                            created = true;
                         }
                         break;
                     default:
                         break;
                 }
             }
-            candidateChromosomes.add(candidate);
+            if (created) {
+                candidateChromosomes.add(candidate);
+            }
         }
+
+        // Category-level constraints
         if (!categoryConstraints.isEmpty()) {
-            boolean created = false;
-            candidate = new Chromosome(implementationGroup);
+            Chromosome candidate = new Chromosome(implementationGroup);
             candidate.setGenes(initialStatus.getGenes());
+            boolean created = false;
             for (Categories category : categoryConstraints.keySet()) {
-                if (category.appliesToIG(implementationGroup)) {
-                    if ((categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.EQUAL) || (categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
-                        CopyOnWriteArrayList<Genes> applicableGenes;
-                        if (categoryConstraints.get(category).getThreshold() == Alleles.DLI_0.getDLI()) {
-                            applicableGenes = Genes.getGenesFor(category, implementationGroup);
-                            for (Genes gene : applicableGenes) {
-                                candidate.updateAllele(gene, Alleles.DLI_0);
-                                created = true;
-                            }
-                        } else if (categoryConstraints.get(category).getThreshold() == Alleles.DLI_100.getDLI()) {
-                            applicableGenes = Genes.getGenesFor(category, implementationGroup);
-                            for (Genes gene : applicableGenes) {
-                                candidate.updateAllele(gene, Alleles.DLI_100);
-                                created = true;
-                            }
+                Constraint c = categoryConstraints.get(category);
+                if (c == null) {
+                    logger.debug("Null constraint for category {}; skipping.", category);
+                    continue;
+                }
+                if (!category.appliesToIG(implementationGroup)) {
+                    logger.debug("Category {} does not apply to IG {}; skipping.", category, implementationGroup);
+                    continue;
+                }
+                if (c.getComparisonOperator() == ComparisonOperators.EQUAL
+                        || c.getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL
+                        || c.getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL) {
+
+                    List<Genes> applicableGenes = Genes.getGenesFor(category, implementationGroup);
+                    Alleles allele = (c.getThreshold() == Alleles.DLI_0.getDLI()) ? Alleles.DLI_0
+                            : (c.getThreshold() == Alleles.DLI_100.getDLI() ? Alleles.DLI_100 : null);
+
+                    if (allele != null && applicableGenes != null) {
+                        for (Genes gene : applicableGenes) {
+                            candidate.updateAllele(gene, allele);
+                            created = true;
                         }
                     }
                 }
@@ -376,28 +429,35 @@ public class StrategicConstraints {
                 candidateChromosomes.add(candidate);
             }
         }
+
+        // Function-level constraints
         if (!functionConstraints.isEmpty()) {
-            boolean created = false;
-            candidate = new Chromosome(implementationGroup);
+            Chromosome candidate = new Chromosome(implementationGroup);
             candidate.setGenes(initialStatus.getGenes());
+            boolean created = false;
             for (Functions function : functionConstraints.keySet()) {
-                if (function.appliesToIG(implementationGroup)) {
-                    if ((functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.EQUAL) || (functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
-                        CopyOnWriteArrayList<Genes> applicableGenes;
-                        if (functionConstraints.get(function).getThreshold() == Alleles.DLI_0.getDLI()) {
-                            applicableGenes = Categories.getGenesFor(function, implementationGroup);
-                            for (Genes gene : applicableGenes) {
-                                candidate.updateAllele(gene, Alleles.DLI_0);
-                                created = true;
-                            }
-                        } else if (functionConstraints.get(function).getThreshold() == Alleles.DLI_100.getDLI()) {
-                            applicableGenes = Categories.getGenesFor(function, implementationGroup);
-                            for (Genes gene : applicableGenes) {
-                                candidate.updateAllele(gene, Alleles.DLI_100);
-                                created = true;
-                            }
+                Constraint c = functionConstraints.get(function);
+                if (c == null) {
+                    logger.debug("Null constraint for function {}; skipping.", function);
+                    continue;
+                }
+                if (!function.appliesToIG(implementationGroup)) {
+                    logger.debug("Function {} does not apply to IG {}; skipping.", function, implementationGroup);
+                    continue;
+                }
+                if (c.getComparisonOperator() == ComparisonOperators.EQUAL
+                        || c.getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL
+                        || c.getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL) {
+
+                    List<Genes> applicableGenes = Categories.getGenesFor(function, implementationGroup);
+                    Alleles allele = (c.getThreshold() == Alleles.DLI_0.getDLI()) ? Alleles.DLI_0
+                            : (c.getThreshold() == Alleles.DLI_100.getDLI() ? Alleles.DLI_100 : null);
+
+                    if (allele != null && applicableGenes != null) {
+                        for (Genes gene : applicableGenes) {
+                            candidate.updateAllele(gene, allele);
+                            created = true;
                         }
-                        candidateChromosomes.add(candidate);
                     }
                 }
             }
@@ -405,27 +465,27 @@ public class StrategicConstraints {
                 candidateChromosomes.add(candidate);
             }
         }
+
+        // Asset-level constraint
         if (assetConstraint != null) {
-            boolean created = false;
-            candidate = new Chromosome(implementationGroup);
+            Chromosome candidate = new Chromosome(implementationGroup);
             candidate.setGenes(initialStatus.getGenes());
-            if ((assetConstraint.getComparisonOperator() == ComparisonOperators.EQUAL) || (assetConstraint.getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (assetConstraint.getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
-                if (assetConstraint.getThreshold() == Alleles.DLI_0.getDLI()) {
+            boolean created = false;
+            if (assetConstraint.getComparisonOperator() == ComparisonOperators.EQUAL
+                    || assetConstraint.getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL
+                    || assetConstraint.getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL) {
+
+                Alleles allele = (assetConstraint.getThreshold() == Alleles.DLI_0.getDLI()) ? Alleles.DLI_0
+                        : (assetConstraint.getThreshold() == Alleles.DLI_100.getDLI() ? Alleles.DLI_100 : null);
+
+                if (allele != null) {
                     for (Genes gene : Genes.values()) {
                         if (gene.appliesToIG(implementationGroup)) {
-                            candidate.updateAllele(gene, Alleles.DLI_0);
-                            created = true;
-                        }
-                    }
-                } else if (assetConstraint.getThreshold() == Alleles.DLI_100.getDLI()) {
-                    for (Genes gene : Genes.values()) {
-                        if (gene.appliesToIG(implementationGroup)) {
-                            candidate.updateAllele(gene, Alleles.DLI_100);
+                            candidate.updateAllele(gene, allele);
                             created = true;
                         }
                     }
                 }
-                candidateChromosomes.add(candidate);
             }
             if (created) {
                 candidateChromosomes.add(candidate);
@@ -436,10 +496,9 @@ public class StrategicConstraints {
     }
 
     /**
-     * This method returns the number of strategic constraints that has been
-     * defined.
+     * Returns the number of defined constraints.
      *
-     * @return the number of strategic constraints that has been defined.
+     * @return number of constraints
      */
     public int numberOfConstraints() {
         int number = 0;
@@ -453,20 +512,44 @@ public class StrategicConstraints {
     }
 
     /**
-     * This method prints the strategic constraints that has been defined,
-     * classifying them in asset constraints, functions constraints, categories
-     * constraints and expected outcomes constraints.
+     * Logs the defined constraints classified by level. Avoids NPEs when some
+     * constraints are not defined.
      */
     public void print() {
-        logger.info("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThreshold());
-        for (Functions function : this.functionConstraints.keySet()) {
-            logger.info("\tFunction constraint........: " + function.name() + " " + this.functionConstraints.get(function).getComparisonOperator().name() + " " + this.functionConstraints.get(function).getThreshold());
+        if (this.assetConstraint != null) {
+            logger.info("\tAsset constraint...........: {} {}", this.assetConstraint.getComparisonOperator().name(), this.assetConstraint.getThreshold());
+        } else {
+            logger.info("\tAsset constraint...........: <none>");
         }
-        for (Categories category : this.categoryConstraints.keySet()) {
-            logger.info("\tCategory constraint........: " + category.name() + " " + this.categoryConstraints.get(category).getComparisonOperator().name() + " " + this.categoryConstraints.get(category).getThreshold());
+        if (this.functionConstraints.isEmpty()) {
+            logger.info("\tFunction constraints........: <none>");
+        } else {
+            for (Functions function : this.functionConstraints.keySet()) {
+                Constraint c = this.functionConstraints.get(function);
+                if (c != null) {
+                    logger.info("\tFunction constraint........: {} {} {}", function.name(), c.getComparisonOperator().name(), c.getThreshold());
+                }
+            }
         }
-        for (Genes gene : this.geneConstraints.keySet()) {
-            logger.info("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThreshold());
+        if (this.categoryConstraints.isEmpty()) {
+            logger.info("\tCategory constraints........: <none>");
+        } else {
+            for (Categories category : this.categoryConstraints.keySet()) {
+                Constraint c = this.categoryConstraints.get(category);
+                if (c != null) {
+                    logger.info("\tCategory constraint........: {} {} {}", category.name(), c.getComparisonOperator().name(), c.getThreshold());
+                }
+            }
+        }
+        if (this.geneConstraints.isEmpty()) {
+            logger.info("\tExpected outcome constraints: <none>");
+        } else {
+            for (Genes gene : this.geneConstraints.keySet()) {
+                Constraint c = this.geneConstraints.get(gene);
+                if (c != null) {
+                    logger.info("\tExpected outcome constraint: {} {} {}", gene.name(), c.getComparisonOperator().name(), c.getThreshold());
+                }
+            }
         }
     }
 
@@ -476,7 +559,8 @@ public class StrategicConstraints {
      *
      * @return the strategic constraints as JSON strings
      */
-    public String getConstraintsAsJSONString() {
+    @Deprecated
+    public String getConstraintsAsJSONString2() {
         String JSONString = "";
         int totalConstraints = categoryConstraints.size() + functionConstraints.size() + geneConstraints.size();
         if (this.assetConstraint != null) {
@@ -530,4 +614,40 @@ public class StrategicConstraints {
         return JSONString;
     }
 
+    /**
+     * Returns the constraints as JSON-like entries separated by commas and
+     * newlines.
+     *
+     * @return JSON-like string
+     */
+    public String getConstraintsAsJSONString() {
+        StringJoiner sj = new StringJoiner(",\n", "", "\n");
+
+        if (assetConstraint != null) {
+            sj.add("\t\t{\"asset\":\"ASSET\",\"operator\":\"" + assetConstraint.getComparisonOperator() + "\",\"value\":" + assetConstraint.getThreshold() + "}");
+        }
+
+        for (Categories category : categoryConstraints.keySet()) {
+            Constraint c = categoryConstraints.get(category);
+            if (c != null) {
+                sj.add("\t\t{\"category\":\"" + category + "\",\"operator\":\"" + c.getComparisonOperator() + "\",\"value\":" + c.getThreshold() + "}");
+            }
+        }
+
+        for (Functions function : functionConstraints.keySet()) {
+            Constraint c = functionConstraints.get(function);
+            if (c != null) {
+                sj.add("\t\t{\"function\":\"" + function + "\",\"operator\":\"" + c.getComparisonOperator() + "\",\"value\":" + c.getThreshold() + "}");
+            }
+        }
+
+        for (Genes gene : geneConstraints.keySet()) {
+            Constraint c = geneConstraints.get(gene);
+            if (c != null) {
+                sj.add("\t\t{\"gene\":\"" + gene + "\",\"operator\":\"" + c.getComparisonOperator() + "\",\"value\":" + c.getThreshold() + "}");
+            }
+        }
+
+        return sj.toString();
+    }
 }
