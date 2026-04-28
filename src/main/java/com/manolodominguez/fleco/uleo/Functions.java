@@ -44,11 +44,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This enum defines all cybersecurity functions and also its weights as defined
- * in CyberTOMP proposal, depending on whether implementation groups 1, 2, or 3
- * applies. Additional descriptions and auxiliar data is provided for each.
+ * This enum defines all cybersecurity functions and their weights per
+ * Implementation Group (IG1, IG2, IG3). Each function also carries an acronym
+ * and a short purpose description.
  *
- * @author manuel Domínguez-Dorado
+ * <p>
+ * Parameter validation has been added: enum constants are validated at
+ * initialization and public API methods validate incoming parameters and log
+ * concise messages before throwing exceptions. The public contract (method
+ * names, return types and semantics) is preserved.</p>
+ *
+ * @author Manuel Domínguez-Dorado
  */
 public enum Functions {
     IDENTIFY(4f / 15f, 6f / 20f, 6f / 23f, "ID", "Develop an organizational understanding to manage cybersecurity risk to systems, people, assets, data, and capabilities."),
@@ -57,32 +63,30 @@ public enum Functions {
     RESPOND(2f / 15f, 5f / 20f, 5f / 23f, "RS", "Develop and implement appropriate activities to take action regarding a detected cybersecurity incident."),
     RECOVER(0f / 15f, 0f / 20f, 3f / 23f, "RC", "Develop and implement appropriate activities to maintain plans for resilience and to restore any capabilities or services that were impaired due to a cybersecurity incident");
 
-    private float weights[] = new float[3];
-    private String acronym = "";
-    private String purpose = "";
+    private final float weights[] = new float[3];
+    private final String acronym;
+    private final String purpose;
 
-    private final Logger logger = LoggerFactory.getLogger(Functions.class);
+    private static final Logger logger = LoggerFactory.getLogger(Functions.class);
 
     /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding values.
+     * Enum constructor. Validates non-null auxiliary data and weight ranges.
      *
-     * @param weightIG1 A float value representing the weight of this
-     * cybersecurity function when applying implementation group 1. A number
-     * between 0.0 and 1.0.
-     * @param weightIG2 A float value representing the weight of this
-     * cybersecurity function when applying implementation group 2. A number
-     * between 0.0 and 1.0.
-     * @param weightIG3 A float value representing the weight of this
-     * cybersecurity function when applying implementation group 3. A number
-     * between 0.0 and 1.0.
-     * @param acronym the very short name of this function.
-     * @param purpose the main purpose of this of this function.
+     * @param weightIG1 weight for IG1 (0.0 - 1.0)
+     * @param weightIG2 weight for IG2 (0.0 - 1.0)
+     * @param weightIG3 weight for IG3 (0.0 - 1.0)
+     * @param acronym short name (must not be null)
+     * @param purpose purpose description (must not be null)
+     * @throws IllegalArgumentException if acronym or purpose is null or any
+     * weight is out of [0,1]
      */
     private Functions(float weightIG1, float weightIG2, float weightIG3, String acronym, String purpose) {
-        this.weights[0] = weightIG1;
-        this.weights[1] = weightIG2;
-        this.weights[2] = weightIG3;
+        if (acronym == null || purpose == null) {
+            throw new IllegalArgumentException("Acronym and purpose cannot be null.");
+        }
+        if (!isValidWeight(weightIG1) || !isValidWeight(weightIG2) || !isValidWeight(weightIG3)) {
+            throw new IllegalArgumentException("Weights must be between 0.0 and 1.0.");
+        }
 
         this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
         this.weights[ImplementationGroups.IG2.getImplementationGroupIndex()] = weightIG2;
@@ -93,56 +97,85 @@ public enum Functions {
     }
 
     /**
-     * This method returns the weight of this cybersecurity function taking into
-     * consideration the impleentation group that applies.
+     * Checks whether a weight value is valid.
      *
-     * @param implementationGroup The implementation group that applies.
-     * @return the weight of the cybersecurity function taking into
-     * consideration the impleentation group that applies.
+     * <p>
+     * A valid weight is a floating point value in the closed interval
+     * {@code [0.0f, 1.0f]}. This helper is used internally during enum
+     * initialization to validate the weights supplied for each Implementation
+     * Group.</p>
+     *
+     * @param w the weight to validate
+     * @return {@code true} if {@code w} is between {@code 0.0f} and
+     * {@code 1.0f} (inclusive); {@code false} otherwise
+     */
+    private static boolean isValidWeight(float w) {
+        return w >= 0.0f && w <= 1.0f;
+    }
+
+    /**
+     * Returns the weight for the provided implementation group.
+     *
+     * @param implementationGroup the implementation group (must not be null)
+     * @return weight in range [0.0, 1.0]
+     * @throws NullPointerException if implementationGroup is null
      */
     public float getWeight(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getWeight().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         return this.weights[implementationGroup.getImplementationGroupIndex()];
     }
 
     /**
-     * This method returns the very short name of this function.
+     * Returns the very short name (acronym) of this function.
      *
-     * @return the very short name of this function.
+     * @return the acronym (never null)
      */
     public String getAcronym() {
         return this.acronym;
     }
 
     /**
-     * This method returns the main purpose of this of this function.
+     * Returns the main purpose of this function.
      *
-     * @return the main purpose of this of this function.
+     * @return the purpose (never null)
      */
     public String getPurpose() {
         return this.purpose;
     }
 
     /**
-     * Given an implementation group, this method returns whether the
-     * cybersecurity function applies for it or not.
+     * Given an implementation group, returns whether this function applies.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return true, if the cybersecurity function applies. Otherwise, false.
+     * @param implementationGroup the applicable implementation group (must not
+     * be null)
+     * @return true if the function applies for the given IG
+     * @throws NullPointerException if implementationGroup is null
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to appliesToIG().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         return weights[implementationGroup.getImplementationGroupIndex()] > 0.0f;
     }
 
     /**
-     * Given an implementation group, this method returns a list of
-     * cybersecurity categories that applies to that implementation group and
-     * belongs to the cybersecurity function.
+     * Given an implementation group, returns the list of Categories that belong
+     * to this function and apply to that implementation group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return a list of cybersecurity categories that applies to that
-     * implementation group and belongs to the cybersecurity function.
+     * @param implementationGroup the applicable implementation group (must not
+     * be null)
+     * @return thread-safe list of Categories (never null, may be empty)
+     * @throws NullPointerException if implementationGroup is null
      */
     public CopyOnWriteArrayList<Categories> getCategories(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getCategories().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         CopyOnWriteArrayList<Categories> categories = new CopyOnWriteArrayList<>();
         for (Categories category : Categories.values()) {
             if ((category.getFunction() == this) && (category.getWeight(implementationGroup) > 0.0f)) {
@@ -153,14 +186,19 @@ public enum Functions {
     }
 
     /**
-     * This method returns the list of cybersecurity categories that are
-     * applicable for a given implementation group.
+     * Returns the list of Functions that are applicable for the given
+     * implementation group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return the list of cybersecurity categories that are applicable for a
-     * given implementation group
+     * @param implementationGroup the applicable implementation group (must not
+     * be null)
+     * @return thread-safe list of Functions (never null, may be empty)
+     * @throws NullPointerException if implementationGroup is null
      */
     public static CopyOnWriteArrayList<Functions> getFunctionsFor(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getFunctionsFor().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         CopyOnWriteArrayList<Functions> functionsList = new CopyOnWriteArrayList<>();
         for (Functions function : Functions.values()) {
             if (function.appliesToIG(implementationGroup)) {

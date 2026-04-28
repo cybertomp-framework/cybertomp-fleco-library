@@ -39,9 +39,6 @@
  */
 package com.manolodominguez.fleco.uleo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Functional areas involved in cybersecurity as defined in the CyberTOMP
  * proposal. Each enum constant carries a short area name and a description of
