@@ -46,12 +46,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This enum defines all cybersecurity categories and also its weights as
- * defined in CyberTOMP proposal, depending on whether implementation groups 1,
- * 2, or 3 applies. Additional descriptions and auxiliar data is provided for
- * each.
+ * Defines all cybersecurity categories and their weights per Implementation
+ * Group (IG1, IG2, IG3). Each category also carries its parent Function,
+ * acronym and a short purpose description.
  *
- * @author manuel Domínguez-Dorado
+ * <p>
+ * Parameter validation has been added: constructor validates weights and
+ * non-null auxiliary data; public API methods validate incoming parameters and
+ * log concise messages before throwing exceptions. The public contract (method
+ * names, return types and semantics) is preserved.</p>
+ *
+ * @author Manuel Domínguez-Dorado
  */
 public enum Categories {
     ID_AM(8f / 12f, 11f / 24f, 11f / 40f, Functions.IDENTIFY, "ID.AM", "Asset management"),
@@ -79,30 +84,31 @@ public enum Categories {
     RC_RP(0f, 0f, 3f / 6f, Functions.RECOVER, "RC.RP", "Recovery planning");
 
     private final float weights[] = new float[3];
-    private Functions function = Functions.DETECT;
-    private String acronym = "";
-    private String purpose = "";
+    private final Functions function;
+    private final String acronym;
+    private final String purpose;
 
-    private final Logger logger = LoggerFactory.getLogger(Categories.class);
+    private static final Logger logger = LoggerFactory.getLogger(Categories.class);
 
     /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding values.
+     * Enum constructor. Validates non-null auxiliary data and weight ranges.
      *
-     * @param weightIG1 A float value representing the weight of this
-     * cybersecurity category when applying implementation group 1. A number
-     * between 0.0 and 1.0.
-     * @param weightIG2 A float value representing the weight of this
-     * cybersecurity category when applying implementation group 2. A number
-     * between 0.0 and 1.0.
-     * @param weightIG3 A float value representing the weight of this
-     * cybersecurity category when applying implementation group 3. A number
-     * between 0.0 and 1.0.
-     * @param category The cybersecurity function the category belongs to.
-     * @param acronym the very short name of this category.
-     * @param purpose the main purpose of this of this category.
+     * @param weightIG1 weight for IG1 (0.0 - 1.0)
+     * @param weightIG2 weight for IG2 (0.0 - 1.0)
+     * @param weightIG3 weight for IG3 (0.0 - 1.0)
+     * @param function parent Function (must not be null)
+     * @param acronym short name (must not be null)
+     * @param purpose purpose description (must not be null)
+     * @throws IllegalArgumentException if any auxiliary parameter is null or
+     * any weight is out of [0,1]
      */
     private Categories(float weightIG1, float weightIG2, float weightIG3, Functions function, String acronym, String purpose) {
+        if (function == null || acronym == null || purpose == null) {
+            throw new IllegalArgumentException("Function, acronym and purpose cannot be null.");
+        }
+        if (!isValidWeight(weightIG1) || !isValidWeight(weightIG2) || !isValidWeight(weightIG3)) {
+            throw new IllegalArgumentException("Weights must be between 0.0 and 1.0.");
+        }
         this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
         this.weights[ImplementationGroups.IG2.getImplementationGroupIndex()] = weightIG2;
         this.weights[ImplementationGroups.IG3.getImplementationGroupIndex()] = weightIG3;
@@ -112,66 +118,94 @@ public enum Categories {
     }
 
     /**
-     * This method returns the weight of this cybersecurity category taking into
-     * consideration the impleentation group that applies.
+     * Checks whether a category weight is valid.
      *
-     * @param implementationGroup The implementation group that applies.
-     * @return the weight of the cybersecurity category taking into
-     * consideration the impleentation group that applies.
+     * <p>
+     * A valid weight is a floating point value in the closed interval
+     * {@code [0.0f, 1.0f]}. This helper is used internally during enum
+     * initialization to validate the weights supplied for each Implementation
+     * Group.</p>
+     *
+     * @param w the weight to validate
+     * @return {@code true} if {@code w} is between {@code 0.0f} and
+     * {@code 1.0f} (inclusive); {@code false} otherwise
+     */
+    private static boolean isValidWeight(float w) {
+        return w >= 0.0f && w <= 1.0f;
+    }
+
+    /**
+     * Returns the weight for the provided implementation group.
+     *
+     * @param implementationGroup the implementation group (must not be null)
+     * @return weight in range [0.0, 1.0]
+     * @throws NullPointerException if implementationGroup is null
      */
     public float getWeight(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getWeight().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         return this.weights[implementationGroup.getImplementationGroupIndex()];
     }
 
     /**
-     * This method returns the very short name of this category.
+     * Returns the acronym (short name) of this category.
      *
-     * @return the very short name of this category.
+     * @return acronym (never null)
      */
     public String getAcronym() {
         return this.acronym;
     }
 
     /**
-     * This method returns the main purpose of this of this category.
+     * Returns the purpose (short description) of this category.
      *
-     * @return the main purpose of this of this category.
+     * @return purpose (never null)
      */
     public String getPurpose() {
         return this.purpose;
     }
 
     /**
-     * This method returns the cybersecurity function the cybersecurity category
-     * belongs to.
+     * Returns the parent Function of this category.
      *
-     * @return the cybersecurity function the cybersecurity category belongs to.
+     * @return function (never null)
      */
     public Functions getFunction() {
         return this.function;
     }
 
     /**
-     * Given an implementation group, this method returns whether the
-     * cybersecurity category applies for it or not.
+     * Returns whether this category applies to the provided implementation
+     * group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return true, if the cybersecurity category applies. Otherwise, false.
+     * @param implementationGroup the implementation group (must not be null)
+     * @return true if weight for that IG is greater than 0.0, which means the
+     * category applies to the implementation group.
+     * @throws NullPointerException if implementationGroup is null
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to appliesToIG().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         return weights[implementationGroup.getImplementationGroupIndex()] > 0.0f;
     }
 
     /**
-     * Given an implementation group, this method returns a list of
-     * genes/expected outcomes that applies to that implementation group and
-     * belongs to the cybersecurity category.
+     * Returns the list of Genes that belong to this category and apply to the
+     * given implementation group.
      *
-     * @param implementationGroup The applicable implementation group.
-     * @return a list of genes/expected outcomes that applies to that
-     * implementation group and belongs to the cybersecurity category.
+     * @param implementationGroup the implementation group (must not be null)
+     * @return LinkedList of Genes (never null, may be empty)
+     * @throws NullPointerException if implementationGroup is null
      */
     public LinkedList<Genes> getGenes(ImplementationGroups implementationGroup) {
+        if (implementationGroup == null) {
+            logger.error("Null implementationGroup passed to getGenes().");
+            throw new NullPointerException("implementationGroup must not be null.");
+        }
         LinkedList<Genes> genes = new LinkedList<>();
         for (Genes g : Genes.values()) {
             if ((g.getCategory() == this) && (g.getWeight(implementationGroup) > 0.0f)) {
@@ -182,18 +216,24 @@ public enum Categories {
     }
 
     /**
-     * This method returns the list of cybersecurity categories that belongs to
-     * a given cybersecurity function and are applicable for a given
-     * implementation group.
+     * Returns the list of Categories that belong to the given Function and
+     * apply to the provided implementation group.
      *
-     * @param function The cybersecurity function whose cbyersecurity categories
-     * are required.
-     * @param implementationGroup The applicable implementation group.
-     * @return the list of cybersecurity categories that belongs to a given
-     * cybersecurity function and are applicable for a given implementation
-     * group.
+     * <p>
+     * Compact parameter check: logs and throws {@link IllegalArgumentException}
+     * when either parameter is null.</p>
+     *
+     * @param function the Function (must not be null)
+     * @param implementationGroup the implementation group (must not be null)
+     * @return thread-safe list of Categories (never null, may be empty)
+     * @throws IllegalArgumentException if function or implementationGroup is
+     * null
      */
     public static CopyOnWriteArrayList<Categories> getCategoriesFor(Functions function, ImplementationGroups implementationGroup) {
+        if (function == null || implementationGroup == null) {
+            logger.error("Null function or implementationGroup passed to getCategoriesFor(). function={}, implementationGroup={}", function, implementationGroup);
+            throw new IllegalArgumentException("Function and implementationGroup cannot be null.");
+        }
         CopyOnWriteArrayList<Categories> categoriesList = new CopyOnWriteArrayList<>();
         for (Categories category : Categories.values()) {
             if (category.appliesToIG(implementationGroup) && (category.getFunction() == function)) {
@@ -204,18 +244,24 @@ public enum Categories {
     }
 
     /**
-     * This method returns the list of genes/expected outcomes that belongs to a
-     * given cybersecurity function and are applicable for a given
-     * implementation group.
+     * Returns the list of Genes that belong to the given Function and apply to
+     * the provided implementation group.
      *
-     * @param function The cybersecurity function whose cybersecurity categories
-     * are required.
-     * @param implementationGroup The applicable implementation group.
-     * @return the list of genes/expected outcomes that belongs to a given
-     * cybersecurity function and are applicable for a given implementation
-     * group.
+     * <p>
+     * Compact parameter check: logs and throws {@link IllegalArgumentException}
+     * when either parameter is null.</p>
+     *
+     * @param function the Function (must not be null)
+     * @param implementationGroup the implementation group (must not be null)
+     * @return thread-safe list of Genes (never null, may be empty)
+     * @throws IllegalArgumentException if function or implementationGroup is
+     * null
      */
     public static CopyOnWriteArrayList<Genes> getGenesFor(Functions function, ImplementationGroups implementationGroup) {
+        if (function == null || implementationGroup == null) {
+            logger.error("Null function or implementationGroup passed to getGenesFor(). function={}, implementationGroup={}", function, implementationGroup);
+            throw new IllegalArgumentException("Function and implementationGroup cannot be null.");
+        }
         CopyOnWriteArrayList<Genes> genesList = new CopyOnWriteArrayList<>();
         for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
             genesList.addAll(Genes.getGenesFor(category, implementationGroup));
