@@ -43,36 +43,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This enum defines all implementation groups as defined in CyberTOMP proposal.
+ * This enum defines all implementation groups as defined in the CyberTOMP®
+ * proposal.
  *
- * @author manuel Domínguez-Dorado
+ * <p>
+ * Each constant carries an integer index used to address arrays of weights (IG1
+ * -> 0, IG2 -> 1, IG3 -> 2). The constructor validates the supplied index to
+ * catch accidental mistakes at initialization time.</p>
+ *
+ * @author Manuel Domínguez-Dorado
  */
 public enum ImplementationGroups {
     IG1(0),
     IG2(1),
     IG3(2);
 
-    private int implementationGroupIndex;
+    private final int implementationGroupIndex;
 
-    private final Logger logger = LoggerFactory.getLogger(ImplementationGroups.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImplementationGroups.class);
 
     /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding values.
+     * Enum constructor.
      *
      * @param implementationGroupIndex The index of this implementation group,
-     * that would be used as array index afterwards.
+     * used as an array index afterwards.
+     * @throws IllegalArgumentException if the index is out of the valid range
+     * [0,2]
      */
     private ImplementationGroups(int implementationGroupIndex) {
+        if (!isValidIndex(implementationGroupIndex)) {
+            throw new IllegalArgumentException("implementationGroupIndex must be 0, 1 or 2.");
+        }
         this.implementationGroupIndex = implementationGroupIndex;
     }
 
     /**
-     * This method returns the index associated to this implementation group.
+     * Returns the index associated to this implementation group.
      *
-     * @return the index associated to this implementation group.
+     * @return the index associated to this implementation group (0..2)
      */
     public int getImplementationGroupIndex() {
         return this.implementationGroupIndex;
+    }
+
+    /**
+     * Validates an implementation group index.
+     *
+     * <p>
+     * Valid indices are 0, 1 and 2. This helper is private because it is only
+     * used during enum initialization to ensure constants are created with
+     * correct indices.</p>
+     *
+     * @param idx the index to validate
+     * @return {@code true} if {@code idx} is 0, 1 or 2; {@code false} otherwise
+     */
+    private static boolean isValidIndex(int idx) {
+        return idx >= 0 && idx <= 2;
     }
 }
