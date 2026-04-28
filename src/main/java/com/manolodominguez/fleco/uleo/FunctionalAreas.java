@@ -43,11 +43,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This enum defines the functional areas involved on cybersecurity as defined
- * in CyberTOMP proposal. Additional descriptions and auxiliar data is provided
- * for each.
+ * Functional areas involved in cybersecurity as defined in the CyberTOMP
+ * proposal. Each enum constant carries a short area name and a description of
+ * its main responsibilities.
  *
- * @author manuel Domínguez-Dorado
+ * <p>
+ * Do not change the public contract (method names, return types or semantics)
+ * without prior agreement.</p>
+ *
+ * @author Manuel Domínguez-Dorado
  */
 public enum FunctionalAreas {
     FA1("Physical security", "Security of Internet of Things (IoT) devices."),
@@ -58,34 +62,40 @@ public enum FunctionalAreas {
     FA6("Enterprise risk management", "Risk treatment, business continuity management, crisis management, establishing the organization’s position regarding cyber risks, insurance contracting, risk registration, auditing, definition of groups of risk management, and definition of those responsible and owners of the processes and assets."),
     FA7("Risk assesment", "Cybersecurity risk analysis, vulnerability scanning, supply chain risk identification and analysis, asset inventory, risk monitoring, penetration testing of infrastructure, people, or information systems."),
     FA8("Application security", "Leading the secure software development cycle, continuous integration and deployment, user experience security, software quality, API security, identification of information flows in information systems, management of the free software used and the static or dynamic analysis of the code."),
-    FA9("Frameworks and standards", "Management, development, implementation, and verification of compliance with the standards and regulations defined at the corporate level for cybersecurity: CIS controls , CIS Community Defense Model , MITRE matrix , , NIST framework for the improvement of cybersecurity of critical infrastructures or the family of standards ISO27000, CyberTOMP."),
+    FA9("Frameworks and standards", "Management, development, implementation, and verification of compliance with the standards and regulations defined at the corporate level for cybersecurity: CIS controls, CIS Community Defense Model, MITRE matrix, NIST framework, ISO27000 family, CyberTOMP."),
     FA10("Security architecture", "Management, definition, implementation, operation, prevention, etc., in relation to cryptography, key and certificate management, encryption standards, security engineering, access controls with or without multiple authentication factors, single sign-on, privileged access management, identity management, identity federation, cloud security, container security, endpoint security, data protection and prevention of data leakage, network design to prevent distributed denial of service attacks, development and secure configuration of systems, patch and update management and the establishment of secure reference configurations."),
     FA11("Career development", "Promote study, education and training, attendance at conferences and participation in related professional groups, training, or certification."),
     FA12("Communication and relationships", "Internal and external corporate communication, social networks management, marketing and the establishment and maintenance of institutional relationship with interested third parties with whom the organization maintains some type of contact."),
     SEVERAL("Several functional areas", "The work to be done cannot be defined at this level and, therefore, are detailed in the corresponding nested metrics.");
 
-    private String mainReponsibilities = "";
-    private String areaName = "";
+    private final String mainResponsibilities;
+    private final String areaName;
 
-    private final Logger logger = LoggerFactory.getLogger(FunctionalAreas.class);
-    
     /**
-     * This is the constructor of the class. it creates the enum and assigns the
-     * corresponding values.
+     * Enum constructor.
      *
-     * @param name the short name of the functional area.
-     * @param mainReponsibilities the main responsibilities the corresponding
-     * functional area must be in charge of.
+     * @param name the short name of the functional area (non-null)
+     * @param mainResponsibilities a short description of the main
+     * responsibilities (non-null)
      */
-    private FunctionalAreas(String name, String mainReponsibilities) {
+    private FunctionalAreas(String name, String mainResponsibilities) {
+        if (name == null || mainResponsibilities == null) {
+            throw new IllegalArgumentException("name and mainResponsibilities cannot be null.");
+        }
         this.areaName = name;
-        this.mainReponsibilities = mainReponsibilities;
+        this.mainResponsibilities = mainResponsibilities;
     }
 
     /**
-     * This method return the short name of the functional area.
+     * Returns the short name of the functional area.
      *
-     * @return the short name of the functional area.
+     * <p>
+     * For the special constant {@code SEVERAL} this method returns the area
+     * name as-is. For all other constants it returns the enum name followed by
+     * " - " and the short area name (for example:
+     * {@code "FA1 - Physical security"}).</p>
+     *
+     * @return the short name of the functional area (never null)
      */
     public String getAreaName() {
         if (name().equals("SEVERAL")) {
@@ -95,14 +105,12 @@ public enum FunctionalAreas {
     }
 
     /**
-     * This method return the main responsibilities the corresponding functional
-     * area must be in charge of.
+     * Returns the main responsibilities associated with this functional area.
      *
-     * @return the main responsibilities the corresponding functional area must
-     * be in charge of.
+     * @return a human-readable description of the main responsibilities (never null)
      */
     public String getMainResponsibilities() {
-        return this.mainReponsibilities;
+        return this.mainResponsibilities;
     }
 
 }
