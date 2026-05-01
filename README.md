@@ -30,11 +30,11 @@ It is developed as as a library that can be seamlessly incorporated into larger 
 
 ## Latest snapshot version being developed:
 
-- <b>CyberTOMP® FLECO Library v3-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v3</b> (current "next" branch) - LGPL-3.0-or-later.
 
 ## Releases:
  
-- <b>CyberTOMP® FLECO Library v2</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v2</b> (current "master" branch) - LGPL-3.0-or-later.
 - <b>CyberTOMP® FLECO Library v1</b> - LGPL-3.0-or-later.
 - <b>FLECO 2.0</b> LGPL-3.0-or-later.
 - <b>FLECO 1.4</b> LGPL-3.0-or-later.
@@ -50,7 +50,7 @@ You can download latest compiled stable releases from the releases section of th
 <dependency>
     <groupId>com.manolodominguez</groupId>
     <artifactId>cybertomp-fleco-library</artifactId>
-    <version>v2</version>
+    <version>v3</version>
 </dependency>
 ```
 For othe project builders (graddle, buildr...) see the next link in Maven Central: https://central.sonatype.com/artifact/com.manolodominguez/cybertomp-fleco-library/v1
