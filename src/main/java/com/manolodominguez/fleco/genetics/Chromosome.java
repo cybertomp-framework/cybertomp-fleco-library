@@ -44,9 +44,9 @@ import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.security.SecureRandom;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +87,9 @@ public class Chromosome {
      * Alleles.values(), which creates a new array on each invocation. This does
      * not alter behavior in any way.
      */
-    private static final Alleles[] ALLELES = Alleles.values();
+    private static final Alleles[] cachedAlleles = Alleles.values();
+
+    private static final SecureRandom sRandom = new SecureRandom();
 
     /**
      * Immutable container for all intermediate metrics derived from the
@@ -215,8 +217,8 @@ public class Chromosome {
     public void randomizeGenes() {
         for (Genes gene : Genes.values()) {
             if (gene.appliesToIG(implementationGroup)) {
-                int randomAllele = ThreadLocalRandom.current().nextInt(0, ALLELES.length);
-                genes.put(gene, ALLELES[randomAllele]);
+                int randomAllele = sRandom.nextInt(cachedAlleles.length);
+                genes.put(gene, cachedAlleles[randomAllele]);
             } else {
                 genes.put(gene, Alleles.DLI_0);
             }

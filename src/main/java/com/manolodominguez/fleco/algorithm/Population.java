@@ -44,8 +44,8 @@ import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.security.SecureRandom;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +59,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
 
     private static final long serialVersionUID = 1L;
     private static final int BEST_CHROMOSOME_INDEX = 0;
+    private static final SecureRandom sRandom = new SecureRandom();
 
     private final int initialNumberOfChromosomes;
     private final transient ImplementationGroups implementationGroup;
@@ -230,13 +231,13 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
             for (Genes gene : mutated.getGenes().keySet()) {
                 if (gene.appliesToIG(implementationGroup)) {
 
-                    if (ThreadLocalRandom.current().nextFloat() < mutationProbability) {
+                    if (sRandom.nextFloat() < mutationProbability) {
                         mutatedFlag = true;
 
                         // Ensure allele actually changes
                         Alleles newAllele;
                         do {
-                            newAllele = allelesArray[ThreadLocalRandom.current().nextInt(allelesArray.length)];
+                            newAllele = allelesArray[sRandom.nextInt(allelesArray.length)];
                         } while (newAllele == mutated.getAllele(gene));
 
                         mutated.updateAllele(gene, newAllele);
@@ -269,7 +270,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
 
         for (int i = 0; i < size() - 1; i += 2) {
 
-            if (ThreadLocalRandom.current().nextFloat() < crossoverProbability) {
+            if (sRandom.nextFloat() < crossoverProbability) {
 
                 Chromosome chromosomeA = new Chromosome(implementationGroup);
                 Chromosome chromosomeB = new Chromosome(implementationGroup);
@@ -285,10 +286,10 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
                     }
                 }
 
-                int crossoverPoint = ThreadLocalRandom.current().nextInt(genesForCrossover.size());
+                int crossoverPoint = sRandom.nextInt(genesForCrossover.size());
 
                 // FIXED: Now correctly chooses between 0 and 1 (before, it was nextInt(1))
-                boolean beginningIsAnchor = ThreadLocalRandom.current().nextInt(2) == 0;
+                boolean beginningIsAnchor = sRandom.nextInt(2) == 0;
 
                 if (beginningIsAnchor) {
                     for (int j = crossoverPoint; j < genesForCrossover.size(); j++) {
