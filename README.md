@@ -30,11 +30,12 @@ It is developed as as a library that can be seamlessly incorporated into larger 
 
 ## Latest snapshot version being developed:
 
-- <b>CyberTOMP® FLECO Library v2-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v3-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
 ## Releases:
  
-- <b>CyberTOMP® FLECO Library v1</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v2</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>CyberTOMP® FLECO Library v1</b> - LGPL-3.0-or-later.
 - <b>FLECO 2.0</b> LGPL-3.0-or-later.
 - <b>FLECO 1.4</b> LGPL-3.0-or-later.
 - <b>FLECO 1.3</b> LGPL-3.0-or-later.
@@ -49,14 +50,14 @@ You can download latest compiled stable releases from the releases section of th
 <dependency>
     <groupId>com.manolodominguez</groupId>
     <artifactId>cybertomp-fleco-library</artifactId>
-    <version>v1</version>
+    <version>v2</version>
 </dependency>
 ```
 For othe project builders (graddle, buildr...) see the next link in Maven Central: https://central.sonatype.com/artifact/com.manolodominguez/cybertomp-fleco-library/v1
 
 # COMPILING FROM SOURCES
 
-The optimal course of action entails acquiring the most recent compiled stable releases from the releases section of this repository. Nevertheless, if one desires to assess novel functionalities, it becomes imperative to compile the project from its sources. The subsequent instructions outline the necessary steps to accomplish this task:
+The recommended approach is to dynamically obtain the latest stable compiled releases from Maven Central or to download them from this repository’s Releases section. However, if you want to evaluate new features, you will need to build the project from source. The following instructions describe the steps required to do so:
 
 - Clone the CyberTOMP® FLECO Library repository: 
 
@@ -77,8 +78,8 @@ mvn package
 
 CyberTOMP® FLECO Library utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of CyberTOMP® FLECO Library under its existing OSS license. The components integrated within CyberTOMP® FLECO Library encompass the following:
 
-- unirest-java-core 4.2.7 - MIT - https://kong.github.io/unirest-java/
-- everit-json-schema 1.14.4 - Apache-2.0 - https://github.com/everit-org/json-schema
+- unirest-java-core 4.8.1 - MIT - https://kong.github.io/unirest-java/
+- everit-json-schema 1.14.6 - Apache-2.0 - https://github.com/everit-org/json-schema
 - slf4j-api 2.1.0-alpha1 - MIT - https://www.slf4j.org
 - slf4j-simple 2.1.0-alpha1 - MIT - https://www.slf4j.org
 

@@ -1,14 +1,14 @@
 {
     "projectinfo": {
         "name": "cybertomp-fleco-library",
-        "version": "v2-SNAPSHOT",
+        "version": "v2",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },
     "componentbindings": [
         {
             "component": "unirest-java-core",
-            "version": "4.2.7",
+            "version": "4.8.1",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
@@ -29,7 +29,7 @@
         },
         {
             "component": "everit-json-schema",
-            "version": "1.14.4",
+            "version": "1.14.6",
             "license": "APACHE_2_0",
             "weight": "NEAR_HIGH",
             "link": "DYNAMIC"

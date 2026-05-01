@@ -5,7 +5,7 @@
         <everit-json-schema.version>1.14.6</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
-        <unirest-java-core.version>4.8.0</unirest-java-core.version>
+        <unirest-java-core.version>4.8.1</unirest-java-core.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
@@ -25,22 +25,19 @@
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>9</maven.compiler.release> 
-        <!-- About this version of FLECO (used for properties filtering) -->
-        <fleco.version>v2-SNAPSHOT</fleco.version>
-        <fleco.license>LGPL-3.0-or-later</fleco.license>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
     <artifactId>cybertomp-fleco-library</artifactId>
-    <version>v2-SNAPSHOT</version>
+    <version>v2</version>
     <packaging>jar</packaging>
     <name>CyberTOMP® FLECO Library</name>
     <description>CyberTOMP® FLECO Library is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With CyberTOMP® FLECO Library, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
     <url>https://www.manolodominguez.com/</url>
     <licenses>
         <license>
-            <name>${fleco.license}</name>
+            <name>LGPL-3.0-or-later</name>
             <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>    
