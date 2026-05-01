@@ -6,9 +6,6 @@
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
         <unirest-java-core.version>4.8.0</unirest-java-core.version>
-        <!--
-        <h2.version>2.4.240</h2.version>
-        -->
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
@@ -231,13 +228,6 @@
             <artifactId>everit-json-schema</artifactId>
             <version>${everit-json-schema.version}</version>
         </dependency>    
-        <!--
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-        </dependency>        
-                -->
     </dependencies>
     <reporting>
         <plugins>
