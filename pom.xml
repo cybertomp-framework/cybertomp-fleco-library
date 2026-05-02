@@ -24,7 +24,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>9</maven.compiler.release> 
+        <maven.compiler.release>11</maven.compiler.release> 
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
