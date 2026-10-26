@@ -74,14 +74,14 @@ public enum Categories {
     DE_AE(1f / 4f, 3f / 12f, 6f / 23f, Functions.DETECT, "DE.AE", "Anomalies and events"),
     DE_CM(2f / 4f, 6f / 12f, 11f / 23f, Functions.DETECT, "DE.CM", "Security continuous monitoring"),
     DE_DP(1f / 4f, 3f / 12f, 6f / 23f, Functions.DETECT, "DE.DP", "Detection processes"),
-    RS_AN(0f / 2f, 1f / 10f, 2f / 18f, Functions.RESPOND, "RS.AN", "Analysis"),
+    RS_AN(0f / 2f, 1f / 10f, 5f / 18f, Functions.RESPOND, "RS.AN", "Analysis"),
     RS_CO(1f / 2f, 2f / 10f, 3f / 18f, Functions.RESPOND, "RS.CO", "Communications"),
-    RS_IM(0f / 2f, 2f / 10f, 5f / 18f, Functions.RESPOND, "RS.IM", "Improvements"),
+    RS_IM(0f / 2f, 2f / 10f, 2f / 18f, Functions.RESPOND, "RS.IM", "Improvements"),
     RS_MI(1f / 2f, 3f / 10f, 6f / 18f, Functions.RESPOND, "RS.MI", "Mitigation"),
     RS_RP(0f / 2f, 2f / 10f, 2f / 18f, Functions.RESPOND, "RS.RP", "Response planning"),
-    RC_CO(0f, 0f, 1f / 6f, Functions.RECOVER, "RC.CO", "Communications"),
+    RC_CO(0f, 0f, 3f / 6f, Functions.RECOVER, "RC.CO", "Communications"),
     RC_IM(0f, 0f, 2f / 6f, Functions.RECOVER, "RC.IM", "Improvements"),
-    RC_RP(0f, 0f, 3f / 6f, Functions.RECOVER, "RC.RP", "Recovery planning");
+    RC_RP(0f, 0f, 1f / 6f, Functions.RECOVER, "RC.RP", "Recovery planning");
 
     private final float weights[] = new float[3];
     private final Functions function;
